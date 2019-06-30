@@ -197,8 +197,7 @@
     $scope.reportChanged = function () {
         $scope.getReport();
     };
-
-
+    
     init = function () {
         var promises = [];
         return $q.all(promises);
