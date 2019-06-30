@@ -49,7 +49,7 @@ namespace Dnn.WebAnalytics
             ClientResourceManager.RegisterScript(this.Page, ResolveUrl("/DesktopModules/Dnn.WebAnalytics/app/controllers/view.js"), 15);
             ClientResourceManager.RegisterScript(this.Page, ResolveUrl("/DesktopModules/Dnn.WebAnalytics/app/controllers/map.js"), 15);
 
-            ClientResourceManager.RegisterScript(this.Page, ResolveUrl("https://maps.googleapis.com/maps/api/js?key=AIzaSyBo1a4oXxfBSaUM4yEMvpKWARqyMsA1vD0"), 20);
+            
         }
     }
 }

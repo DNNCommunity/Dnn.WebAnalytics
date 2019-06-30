@@ -106,6 +106,10 @@
       <DependentUpon>Map.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="MapSettings.ascx.cs">
+      <DependentUpon>MapSettings.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="View.ascx.cs">
       <DependentUpon>View.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -143,6 +147,7 @@
     <Content Include="app\views\map.html" />
     <Content Include="app\views\view.html" />
     <Content Include="Map.ascx" />
+    <Content Include="MapSettings.ascx" />
     <Content Include="plugins\angular-chart\angular-chart.js" />
     <Content Include="plugins\angular-chart\angular-chart.min.js" />
     <Content Include="plugins\lodash\lodash.js" />

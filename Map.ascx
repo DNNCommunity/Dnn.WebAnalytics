@@ -5,7 +5,6 @@
 </div>
 
 <script>
-    var googleAPIKey = '<%= GoogleAPIKey  %>';
     var module_id = <%= ModuleId %>;
     var portal_id = <%= PortalId %>;
     var sf = $.ServicesFramework(module_id);
