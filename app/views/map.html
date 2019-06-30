@@ -1,0 +1,25 @@
+﻿
+<div class="form-group row">
+    <label class="col-sm-6 col-form-label text-sm-right">Show Visitors For The Past:</label>
+    <div class="col-xs-3 col-sm-4">
+        <select name="minutes" id="minutes" class="form-control" ng-model="minutes" ng-change="getMapPoints()">
+            <option value="1">1 minute</option>
+            <option value="5">5 minutes</option>
+            <option value="10">10 minutes</option>
+            <option value="30">30 minutes</option>
+            <option value="60">1 hour</option>
+            <option value="1440">1 day</option>
+        </select>
+    </div>
+</div>
+
+<div id="map" style="height:500px;"></div>
+
+<div class="row">
+    <div class="col text-right">
+        <img src="http://maps.google.com/mapfiles/ms/icons/red.png">Visitors Online: <span class="badge badge-primary">{{visitors_online}}</span>
+    </div>
+    <div class="col text-left">
+        <img src="http://maps.google.com/mapfiles/ms/icons/blue.png">Users Online: <span class="badge badge-primary">{{users_online}}</span>
+    </div>
+</div>

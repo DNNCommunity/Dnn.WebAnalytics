@@ -1,0 +1,135 @@
+﻿
+<div ng-show="loading" style="font-size: 60px; text-align: center;">
+    <i class="fas fa-cog fa-spin fa-3x fa-fw"></i>
+</div>
+
+
+<div ng-form="formWebAnalytics" id="formWebAnalytics" class="form" ng-show="!loading">
+
+    <div class="form-row">
+        <div class="col">
+            <div class="form-group">
+                <div class="input-group">
+                    <input name="period_start" id="period_start" type="text" placeholder="mm/dd/yyyy" class="form-control" date-formatter uib-datepicker-popup="M!/d!/yyyy" ng-model="period_start" is-open="periodStartDateTimePicker.isOpen" datepicker-options="dateOptions" close-text="Close" />
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <a href="#" class="text-muted" ng-click="periodStartDateTimePicker.isOpen=!periodStartDateTimePicker.isOpen"><i class="fas fa-calendar"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <div class="input-group">
+                    <input name="period_end" id="period_end" type="text" placeholder="mm/dd/yyyy" class="form-control" date-formatter uib-datepicker-popup="M!/d!/yyyy" ng-model="period_end" is-open="periodEndDateTimePicker.isOpen" datepicker-options="dateOptions" close-text="Close" />
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <a href="#" class="text-muted" ng-click="periodEndDateTimePicker.isOpen=!periodEndDateTimePicker.isOpen"><i class="fas fa-calendar"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-2">
+            <a href="javascript:void(0)" class="btn btn-block btn-primary" ng-click="getDashboard()">Search</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <button type="button" class="btn btn-sm btn-light" ng-click="lastWeek()">Last Week</button>
+            <button type="button" class="btn btn-sm btn-light" ng-click="lastMonth()">Last Month</button>
+            <button type="button" class="btn btn-sm btn-light" ng-click="last3Months()">Last 3 Months</button>
+        </div>
+    </div>
+
+    <hr />
+
+    <!--<div class="row">
+        <div class="col text-center">Views: <span class="badge badge-primary">{{view_count}}</span></div>
+        <div class="col text-center">Visits: <span class="badge badge-primary">{{visit_count}}</span></div>
+        <div class="col text-center">Visitors: <span class="badge badge-primary">{{visitor_count}}</span></div>
+        <div class="col text-center">Users: <span class="badge badge-primary">{{user_count}}</span></div>
+    </div>-->
+
+    <canvas id="line" class="chart chart-line" chart-data="chart_data" chart-labels="chart_labels" chart-series="chart_series" chart-options="chart_options"></canvas>
+
+    <hr />
+    <h3>Visit Breakdown</h3>
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <label for="report_type" class="control-label">By Field</label>
+                <select class="form-control" ng-model="field" ng-change="reportChanged()">
+                    <option value="date">Dates</option>
+                    <option value="weekday">Week Days</option>
+                    <option value="month">Month</option>
+                    <option value="hour">Hours</option>
+                    <option value="user">Users</option>
+                    <option value="page">Pages</option>
+                    <option value="referrer_domain">Referrer Domains</option>
+                    <option value="device_type">Device Types</option>
+                    <option value="domain">Domain</option>
+                    <option value="url">URLs</option>
+                    <option value="ip">IP Addresses</option>
+                    <option value="country">Country</option>
+                    <option value="region">Regions</option>
+                    <option value="city">Cities</option>
+                    <option value="language">Languages</option>
+                    <option value="user_agent">User Agents</option>
+                    <option value="device">Devices</option>
+                    <option value="platform">Platform</option>
+                    <option value="browser">Browsers</option>
+                    <option value="campaign">Campaigns</option>
+                    <option value="server">Servers</option>
+                </select>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <label for="row" class="control-label">Number of Results</label>
+                <select class="form-control" ng-model="rows" ng-change="reportChanged()">
+                    <option value="10">Top 10</option>
+                    <option value="25">Top 25</option>
+                    <option value="50">Top 50</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="pie" class="pie chart-pie" chart-data="pie_chart_data" chart-labels="pie_chart_labels" chart-options="pie_chart_options"></canvas>
+
+    <table class="table table-striped">
+        <colgroup>
+            <col />
+            <col />
+            <col />
+            <col />
+        </colgroup>
+        <thead>
+            <tr>
+                <th>Field</th>
+                <th>Count</th>
+                <th>Total</th>
+                <th>Percent</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="report_row in report_rows">
+                <td>
+                    {{report_row.field}}
+                </td>
+                <td>
+                    {{report_row.count}}
+                </td>
+                <td>
+                    {{report_row.total}}
+                </td>
+                <td>
+                    {{report_row.percent}}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
