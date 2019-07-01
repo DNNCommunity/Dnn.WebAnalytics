@@ -125,7 +125,7 @@ namespace Dnn.WebAnalytics
 
                         // create Visitor cookie
                         cookie_visitor = new HttpCookie("DNNVISITOR");
-                        cookie_visitor.Value = visitor_id.ToString();
+                        cookie_visitor.Value = visitor.id.ToString();
                         cookie_visitor.Expires = DateTime.MaxValue;
                         Response.Cookies.Add(cookie_visitor);
 
@@ -168,7 +168,7 @@ namespace Dnn.WebAnalytics
 
                         //user agenet
                         string user_agent = Request.UserAgent;
-                        
+
                         // create visit object
                         VisitDTO visitDTO = new VisitDTO()
                         {
