@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 
 namespace Dnn.WebAnalytics
 {
+    [Serializable]
     public class DashboardDTO
     {
         // initialization

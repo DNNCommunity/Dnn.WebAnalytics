@@ -2,6 +2,7 @@ using System;
 
 namespace Dnn.WebAnalytics
 {
+    [Serializable]
     public class ReportDTO
     {
         // initialization
