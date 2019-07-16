@@ -1,17 +1,17 @@
 
-CREATE TABLE [dbo].[Visitors](
+CREATE TABLE {databaseOwner}[{objectQualifier}Visitors](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[portal_id] [int] NOT NULL,
 	[user_id] [int] NULL,
 	[created_on_date] [datetime] NOT NULL,
- CONSTRAINT [PK_Visitors] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_{objectQualifier}Visitors] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) 
+) 
 GO
 
-CREATE TABLE [dbo].[Visits](
+CREATE TABLE {databaseOwner}[{objectQualifier}Visits](
 	[id] [bigint] IDENTITY(1,1) NOT NULL,
 	[date] [datetime] NOT NULL,
 	[visitor_id] [int] NOT NULL,
@@ -37,39 +37,47 @@ CREATE TABLE [dbo].[Visits](
 	[session_id] [uniqueidentifier] NULL,
 	[request_id] [uniqueidentifier] NULL,
 	[last_request_id] [uniqueidentifier] NULL,
- CONSTRAINT [PK_Visits] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_{objectQualifier}Visits] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) 
+) 
 GO
-ALTER TABLE [dbo].[Visitors]  WITH CHECK ADD  CONSTRAINT [FK_Visitors_Portals] FOREIGN KEY([portal_id])
-REFERENCES [dbo].[Portals] ([PortalID])
+
+ALTER TABLE {databaseOwner}[{objectQualifier}Visitors]  WITH CHECK ADD  CONSTRAINT [FK_{objectQualifier}Visitors_Portals] FOREIGN KEY([portal_id])
+REFERENCES {databaseOwner}[{objectQualifier}Portals] ([PortalID])
 ON DELETE CASCADE
 GO
-ALTER TABLE [dbo].[Visitors] CHECK CONSTRAINT [FK_Visitors_Portals]
+
+ALTER TABLE {databaseOwner}[{objectQualifier}Visitors] CHECK CONSTRAINT [FK_Visitors_Portals]
 GO
-ALTER TABLE [dbo].[Visitors]  WITH CHECK ADD  CONSTRAINT [FK_Visitors_Users] FOREIGN KEY([user_id])
-REFERENCES [dbo].[Users] ([UserID])
+
+ALTER TABLE {databaseOwner}[{objectQualifier}Visitors]  WITH CHECK ADD  CONSTRAINT [FK_{objectQualifier}Visitors_Users] FOREIGN KEY([user_id])
+REFERENCES {databaseOwner}[{objectQualifier}Users] ([UserID])
 ON UPDATE CASCADE
 ON DELETE CASCADE
 GO
-ALTER TABLE [dbo].[Visitors] CHECK CONSTRAINT [FK_Visitors_Users]
+
+ALTER TABLE {databaseOwner}[{objectQualifier}Visitors] CHECK CONSTRAINT [FK_{objectQualifier}Visitors_Users]
 GO
-ALTER TABLE [dbo].[Visits]  WITH CHECK ADD  CONSTRAINT [FK_Visits_Tabs] FOREIGN KEY([tab_id])
-REFERENCES [dbo].[Tabs] ([TabID])
+
+ALTER TABLE {databaseOwner}[{objectQualifier}Visits]  WITH CHECK ADD  CONSTRAINT [FK_{objectQualifier}Visits_Tabs] FOREIGN KEY([tab_id])
+REFERENCES {databaseOwner}[{objectQualifier}Tabs] ([TabID])
 GO
-ALTER TABLE [dbo].[Visits] CHECK CONSTRAINT [FK_Visits_Tabs]
+
+ALTER TABLE {databaseOwner}[{objectQualifier}Visits] CHECK CONSTRAINT [FK_{objectQualifier}Visits_Tabs]
 GO
-ALTER TABLE [dbo].[Visits]  WITH CHECK ADD  CONSTRAINT [FK_Visits_Visitors] FOREIGN KEY([visitor_id])
-REFERENCES [dbo].[Visitors] ([id])
+
+ALTER TABLE {databaseOwner}[{objectQualifier}Visits]  WITH CHECK ADD  CONSTRAINT [FK_{objectQualifier}Visits_Visitors] FOREIGN KEY([visitor_id])
+REFERENCES {databaseOwner}[{objectQualifier}Visitors] ([id])
 ON DELETE CASCADE
+
 GO
-ALTER TABLE [dbo].[Visits] CHECK CONSTRAINT [FK_Visits_Visitors]
+ALTER TABLE {databaseOwner}[{objectQualifier}Visits] CHECK CONSTRAINT [FK_{objectQualifier}Visits_Visitors]
 GO
 
 
-INSERT INTO dbo.Schedule
+INSERT INTO {databaseOwner}[{objectQualifier}Schedule]
 	( TypeFullName, [TimeLapse], [TimeLapseMeasurement], [RetryTimeLapse], [RetryTimeLapseMeasurement], [RetainHistoryNum], [AttachToEvent], [CatchUpEnabled], [Enabled], [ObjectDependencies], [Servers], [FriendlyName])
 VALUES ( 'Dnn.WebAnalytics.VisitorJob, Dnn.WebAnalytics', 1, 'd', 1, 'd', 10, '', 0, 1, '', null, 'Visitor Tracking Job' )
 GO
