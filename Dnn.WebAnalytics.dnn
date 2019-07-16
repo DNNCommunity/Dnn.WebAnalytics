@@ -61,6 +61,10 @@
               <version>01.01.00</version>
               <name>Dnn.WebAnalytics.dll</name>
             </assembly>
+            <assembly>
+              <version>11.00.00</version>
+              <name>Newtonsoft.Json.dll</name>
+            </assembly>
           </assemblies>
         </component>
 
@@ -92,6 +96,14 @@
               <configuration>
                 <node path="/configuration/system.webServer/modules" action="update" key="name" collision="overwrite">
                   <add name="VisitorTracker" type="Dnn.WebAnalytics.VisitorTracker, Dnn.WebAnalytics" preCondition="managedHandler" />
+                </node>
+                <node path="/configuration/runtime/ab:assemblyBinding" action="update"
+          targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='Newtonsoft.Json']"
+          collision="overwrite" nameSpace="urn:schemas-microsoft-com:asm.v1" nameSpacePrefix="ab">
+                  <dependentAssembly>
+                    <assemblyIdentity name="Newtonsoft.Json" publicKeyToken="30ad4fe6b2a6aeed" culture="neutral" />
+                    <bindingRedirect oldVersion="0.0.0.0-32767.32767.32767.32767" newVersion="11.0.0.0" />
+                  </dependentAssembly>
                 </node>
               </configuration>
             </install>
