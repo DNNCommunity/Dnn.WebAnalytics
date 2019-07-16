@@ -57,7 +57,7 @@ REFERENCES {databaseOwner}[{objectQualifier}Portals] ([PortalID])
 ON DELETE CASCADE
 GO
 
-ALTER TABLE {databaseOwner}[{objectQualifier}Visitors] CHECK CONSTRAINT [FK_Visitors_Portals]
+ALTER TABLE {databaseOwner}[{objectQualifier}Visitors] CHECK CONSTRAINT [FK_{objectQualifier}Visitors_Portals]
 GO
 
 ALTER TABLE {databaseOwner}[{objectQualifier}Visitors]  WITH CHECK ADD  CONSTRAINT [FK_{objectQualifier}Visitors_Users] FOREIGN KEY([user_id])
