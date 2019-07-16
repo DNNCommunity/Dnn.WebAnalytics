@@ -61,6 +61,10 @@
               <version>01.01.00</version>
               <name>Dnn.WebAnalytics.dll</name>
             </assembly>
+            <assembly>
+              <version>11.00.00</version>
+              <name>Newtonsoft.Json.dll</name>
+            </assembly>
           </assemblies>
         </component>
         <component type="File">
