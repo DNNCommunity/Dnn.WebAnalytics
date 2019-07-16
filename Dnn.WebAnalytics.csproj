@@ -185,13 +185,6 @@
     <Content Include="Dnn.WebAnalytics.dnn" />
     <None Include="packages.config" />
     <Content Include="plugins\angular-chart\angular-chart.min.js.map" />
-    <Content Include="web.config" />
-    <None Include="web.Debug.config">
-      <DependentUpon>web.config</DependentUpon>
-    </None>
-    <None Include="web.Release.config">
-      <DependentUpon>web.config</DependentUpon>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
