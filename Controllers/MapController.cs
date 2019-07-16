@@ -1,4 +1,5 @@
-﻿using DotNetNuke.Security;
+﻿using DotNetNuke.Instrumentation;
+using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
 using System;
@@ -12,11 +13,10 @@ using MaxMind.GeoIP2;
 
 namespace Dnn.WebAnalytics
 {
-    //[SupportedModules("Dnn.WebAnalytics")]
-    //[ValidateAntiForgeryToken]
     public class MapController : DnnApiController
     {
-        DataContext dc = new DataContext();
+        private static readonly ILog Logger = LoggerSource.Instance.GetLogger(typeof(MapController));
+        private VisitInfoRepo visitRepo = new VisitInfoRepo();
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
@@ -27,10 +27,10 @@ namespace Dnn.WebAnalytics
             {
                 List<MapDTO> dtos = new List<MapDTO>();
 
-                List<Visit> recent_visits = dc.Visits
+                List<VisitInfo> recent_visits = visitRepo.GetItemsAll()
                     .Where(i =>
                         i.date >= DateTime.Now.AddMinutes(-minutes) &&
-                        i.latitude != "" && i.longitude != ""
+                        i.latitude != string.Empty && i.longitude != string.Empty
                     )
                     .ToList();
 
@@ -46,7 +46,7 @@ namespace Dnn.WebAnalytics
 
                 foreach (long id in ids)
                 {
-                    var visit = dc.Visits.Where(i => i.id == id).SingleOrDefault();
+                    var visit = visitRepo.GetItemById((int)id);  // this may need to be debugged and/or handled better later
                     if (visit != null)
                     {
                         MapDTO mapDTO = new MapDTO()
@@ -56,7 +56,6 @@ namespace Dnn.WebAnalytics
                             longitude = visit.longitude
                         };
                         dtos.Add(mapDTO);
-
                     }
                 }
 
@@ -64,6 +63,7 @@ namespace Dnn.WebAnalytics
             }
             catch (Exception ex)
             {
+                Logger.Error(ex.Message, ex);
                 Exceptions.LogException(ex);
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex);
             }
@@ -107,6 +107,7 @@ namespace Dnn.WebAnalytics
             }
             catch (Exception ex)
             {
+                Logger.Error(ex.Message, ex);
                 Exceptions.LogException(ex);
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex);
             }

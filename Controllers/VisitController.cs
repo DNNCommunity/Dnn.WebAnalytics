@@ -1,4 +1,5 @@
-﻿using DotNetNuke.Security;
+﻿using DotNetNuke.Instrumentation;
+using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
 using FiftyOne.Foundation.Mobile.Detection;
@@ -17,49 +18,50 @@ namespace Dnn.WebAnalytics
     [ValidateAntiForgeryToken]
     public class VisitController : DnnApiController
     {
-        VisitorController visitorController = new VisitorController();
-        DataContext dc = new DataContext();
+        private static readonly ILog Logger = LoggerSource.Instance.GetLogger(typeof(VisitController));
+        private VisitInfoRepo visitRepo = new VisitInfoRepo();
         public static string UserAgentFilter = "bot|crawl|spider|sbider|ask|slurp|larbin|search|indexer|archiver|nutch|capture|scanalert";
 
         [NonAction]
-        public VisitDTO ConvertItemToDto(Visit item)
+        public VisitDTO ConvertItemToDto(VisitInfo item)
         {
-            VisitDTO dto = new VisitDTO();
-
-            dto.id = item.id;
-            dto.date = item.date;
-            dto.visitor_id = item.visitor_id;
-            dto.tab_id = item.tab_id;
-            dto.ip = item.ip;
-            dto.country = item.country;
-            dto.region = item.region;
-            dto.city = item.city;
-            dto.latitude = item.latitude;
-            dto.longitude = item.longitude;
-            dto.language = item.language;
-            dto.domain = item.domain;
-            dto.url = item.url;
-            dto.user_agent = item.user_agent;
-            dto.device_type = item.device_type;
-            dto.device = item.device;
-            dto.platform = item.platform;
-            dto.browser = item.browser;
-            dto.referrer_domain = item.referrer_domain;
-            dto.referrer_url = item.referrer_url;
-            dto.server = item.server;
-            dto.campaign = item.campaign;
-            dto.session_id = item.session_id;
-            dto.request_id = item.request_id;
-            dto.last_request_id = item.last_request_id;
+            VisitDTO dto = new VisitDTO
+            {
+                id = item.id,
+                date = item.date,
+                visitor_id = item.visitor_id,
+                tab_id = item.tab_id,
+                ip = item.ip,
+                country = item.country,
+                region = item.region,
+                city = item.city,
+                latitude = item.latitude,
+                longitude = item.longitude,
+                language = item.language,
+                domain = item.domain,
+                url = item.url,
+                user_agent = item.user_agent,
+                device_type = item.device_type,
+                device = item.device,
+                platform = item.platform,
+                browser = item.browser,
+                referrer_domain = item.referrer_domain,
+                referrer_url = item.referrer_url,
+                server = item.server,
+                campaign = item.campaign,
+                session_id = item.session_id,
+                request_id = item.request_id,
+                last_request_id = item.last_request_id
+            };
 
             return dto;
         }
         [NonAction]
-        public Visit ConvertDtoToItem(Visit item, VisitDTO dto)
+        public VisitInfo ConvertDtoToItem(VisitInfo item, VisitDTO dto)
         {
             if (item == null)
             {
-                item = new Visit();
+                item = new VisitInfo();
             }
 
             if (dto == null)
@@ -105,9 +107,9 @@ namespace Dnn.WebAnalytics
             {
                 List<VisitDTO> dtos = new List<VisitDTO>();
 
-                var query = dc.Visits.AsQueryable();
+                var query = visitRepo.GetItemsAll().AsQueryable();
 
-                foreach (Visit item in query)
+                foreach (VisitInfo item in query)
                 {
                     VisitDTO dto = ConvertItemToDto(item);
                     dtos.Add(dto);
@@ -117,6 +119,7 @@ namespace Dnn.WebAnalytics
             }
             catch (Exception ex)
             {
+                Logger.Error(ex.Message, ex);
                 Exceptions.LogException(ex);
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex);
             }
@@ -129,7 +132,7 @@ namespace Dnn.WebAnalytics
         {
             try
             {
-                Visit item = dc.Visits.Where(i => i.id == id).SingleOrDefault();
+                VisitInfo item = visitRepo.GetItemById(id);
 
                 if (item == null)
                 {
@@ -140,6 +143,7 @@ namespace Dnn.WebAnalytics
             }
             catch (Exception ex)
             {
+                Logger.Error(ex.Message, ex);
                 Exceptions.LogException(ex);
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex);
             }
@@ -151,7 +155,7 @@ namespace Dnn.WebAnalytics
         {
             try
             {
-                var query = dc.Visits.Where(i => i.Tab.PortalID == portal_id);
+                var query = visitRepo.GetItems(portal_id);//dc.Visits.Where(i => i.Tab.PortalID == portal_id);
 
                 if (period_start.HasValue)
                 {
@@ -182,6 +186,7 @@ namespace Dnn.WebAnalytics
             }
             catch (Exception ex)
             {
+                Logger.Error(ex.Message, ex);
                 Exceptions.LogException(ex);
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex);
             }
@@ -195,7 +200,7 @@ namespace Dnn.WebAnalytics
             {
                 List<ReportDTO> results = new List<ReportDTO>();
 
-                var query = dc.Visits.Where(i => i.Tab.PortalID == portal_id );
+                var query = visitRepo.GetItemsByPortalId(portal_id);
 
                 if (period_start.HasValue)
                 {
@@ -209,7 +214,7 @@ namespace Dnn.WebAnalytics
 
                 var list = query.ToList();
 
-                IEnumerable<IGrouping<string, Visit>> grouped = null;
+                IEnumerable<IGrouping<string, VisitInfo>> grouped = null;
 
                 switch (field)
                 {
@@ -327,6 +332,7 @@ namespace Dnn.WebAnalytics
             }
             catch (Exception ex)
             {
+                Logger.Error(ex.Message, ex);
                 Exceptions.LogException(ex);
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex);
             }
@@ -344,6 +350,7 @@ namespace Dnn.WebAnalytics
             }
             catch (Exception ex)
             {
+                Logger.Error(ex.Message, ex);
                 Exceptions.LogException(ex);
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex);
             }
@@ -361,6 +368,7 @@ namespace Dnn.WebAnalytics
             }
             catch (Exception ex)
             {
+                Logger.Error(ex.Message, ex);
                 Exceptions.LogException(ex);
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex);
             }
@@ -372,20 +380,20 @@ namespace Dnn.WebAnalytics
         {
             try
             {
-                Visit item = dc.Visits.Where(i => i.id == id).SingleOrDefault();
+                VisitInfo visit = visitRepo.GetItemById(id);
 
-                if (item == null)
+                if (visit == null)
                 {
                     return Request.CreateResponse(HttpStatusCode.NotFound);
                 }
 
-                dc.Visits.DeleteOnSubmit(item);
-                dc.SubmitChanges();
+                visitRepo.DeleteItem(visit);
 
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
             catch (Exception ex)
             {
+                Logger.Error(ex.Message, ex);
                 Exceptions.LogException(ex);
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex);
             }
@@ -394,65 +402,17 @@ namespace Dnn.WebAnalytics
         [NonAction]
         public VisitDTO SaveVisit(VisitDTO dto)
         {
-            Visit visit = dc.Visits.Where(i => i.id == dto.id).SingleOrDefault();
+            VisitInfo visit = visitRepo.GetItemById((int)dto.id);  // this may have to be re-worked or done in another way later
 
             if (visit == null)
             {
                 visit = ConvertDtoToItem(null, dto);
 
-                dc.Visits.InsertOnSubmit(visit);
+                visit = visitRepo.CreateItem(visit);
             }
-
-            visit = ConvertDtoToItem(visit, dto);
-
-            dc.SubmitChanges();
 
             return ConvertItemToDto(visit);
         }
-
-        //[NonAction]
-        //public void WriteVisits()
-        //{
-        //    List<VisitDTO> visit_dtos = new List<VisitDTO>();
-                        
-        //    // dictionary to store visitors to update
-        //    Dictionary<int, Nullable<int>> dicVisitors = new Dictionary<int, Nullable<int>>();
-
-        //    // get all visitor objects from Cache
-        //    dynamic CacheItems = HttpRuntime.Cache.Cast<DictionaryEntry>().Select(entry => (string)entry.Key).Where(key => key.StartsWith("DNNVISITOR")).ToArray();
-
-        //    // iterate through visit items
-        //    foreach (string Key in CacheItems)
-        //    {
-        //        // get visitor object
-        //        VisitDTO visit_dto = (VisitDTO)HttpRuntime.Cache.Get(Key);
-
-        //        // populate visit fields
-        //        visit_dto = ProcessVisit(visit_dto);
-
-        //        Visit visit = ConvertDtoToItem(null, visit_dto);
-        //        dc.Visits.InsertOnSubmit(visit);
-        //        dc.SubmitChanges();
-
-        //        //// save visitor 
-        //        //if (!dicVisitors.ContainsKey(visit_dto.visitor_id))
-        //        //{
-        //        //    dicVisitors.Add(visit_dto.visitor_id, visit_dto..user_id);
-        //        //}
-        //        //else
-        //        //{
-        //        //    dicVisitors[visit_dto.visitor_id] = visit_dto.user_id;
-        //        //}
-
-        //        HttpRuntime.Cache.Remove(Key);                
-        //    }
-            
-        //    //// iterate through all visitors that need to be updated
-        //    //foreach (KeyValuePair<int, Nullable<int>> kvp in dicVisitors)
-        //    //{
-        //    //    visitorController.UpdateVisitor(kvp.Key, kvp.Value);
-        //    //}
-        //}
 
         [NonAction]
         public VisitDTO ProcessVisit(VisitDTO visit)
@@ -560,15 +520,14 @@ namespace Dnn.WebAnalytics
         public void PurgeVisits()
         {
             // delete all visit history older than 90 days
-            List<Visit> visits = dc.Visits.Where(i => i.date.Date < DateTime.Now.AddDays(-90).Date).ToList();
-            dc.Visits.DeleteAllOnSubmit(visits);
-            dc.SubmitChanges();
+            List<VisitInfo> visits = visitRepo.GetItemsAll().Where(i => i.date.Date < DateTime.Now.AddDays(-90).Date).ToList();
+            visitRepo.DeleteItems(visits);
         }
             
         [NonAction]
         public List<DateCountDTO> GetViews(int portal_id, Nullable<DateTime> start_date, Nullable<DateTime> end_date)
         {
-            var query = dc.Visits.Where(i => i.Tab.PortalID == portal_id);
+            var query = visitRepo.GetItemsByPortalId(portal_id);
 
             if (start_date.HasValue)
             {
@@ -598,7 +557,7 @@ namespace Dnn.WebAnalytics
         [NonAction]
         public List<DateCountDTO> GetVisits(int portal_id, Nullable<DateTime> start_date, Nullable<DateTime> end_date)
         {
-            var query = dc.Visits.Where(i => i.Tab.PortalID == portal_id);
+            var query = visitRepo.GetItemsByPortalId(portal_id);
 
             if (start_date.HasValue)
             {
@@ -628,7 +587,7 @@ namespace Dnn.WebAnalytics
         [NonAction]
         public List<DateCountDTO> GetVisitors(int portal_id, Nullable<DateTime> start_date, Nullable<DateTime> end_date)
         {
-            var query = dc.Visits.Where(i => i.Tab.PortalID == portal_id);
+            var query = visitRepo.GetItemsByPortalId(portal_id);
 
             if (start_date.HasValue)
             {
@@ -658,7 +617,7 @@ namespace Dnn.WebAnalytics
         [NonAction]
         public List<DateCountDTO> GetUsers(int portal_id, Nullable<DateTime> start_date, Nullable<DateTime> end_date)
         {
-            var query = dc.Visits.Where(i => i.Tab.PortalID == portal_id);
+            var query = visitRepo.GetItemsByPortalId(portal_id);
 
             if (start_date.HasValue)
             {

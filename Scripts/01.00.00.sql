@@ -1,21 +1,4 @@
-
-IF NOT OBJECT_ID('{databaseOwner}[{objectQualifier}Visitors]') IS NULL
-    DROP TABLE {databaseOwner}[{objectQualifier}Visitors];
-GO
-
-CREATE TABLE {databaseOwner}[{objectQualifier}Visitors](
-	[id] [int] IDENTITY(1,1) NOT NULL,
-	[portal_id] [int] NOT NULL,
-	[user_id] [int] NULL,
-	[created_on_date] [datetime] NOT NULL,
- CONSTRAINT [PK_{objectQualifier}Visitors] PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) 
-) 
-GO
-
-IF NOT OBJECT_ID('{databaseOwner}[{objectQualifier}Visitors]') IS NULL
+IF NOT OBJECT_ID('{databaseOwner}[{objectQualifier}Visits]') IS NULL
     DROP TABLE {databaseOwner}[{objectQualifier}Visits];
 GO
 
@@ -46,6 +29,22 @@ CREATE TABLE {databaseOwner}[{objectQualifier}Visits](
 	[request_id] [uniqueidentifier] NULL,
 	[last_request_id] [uniqueidentifier] NULL,
  CONSTRAINT [PK_{objectQualifier}Visits] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) 
+) 
+GO
+
+IF NOT OBJECT_ID('{databaseOwner}[{objectQualifier}Visitors]') IS NULL
+    DROP TABLE {databaseOwner}[{objectQualifier}Visitors];
+GO
+
+CREATE TABLE {databaseOwner}[{objectQualifier}Visitors](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[portal_id] [int] NOT NULL,
+	[user_id] [int] NULL,
+	[created_on_date] [datetime] NOT NULL,
+ CONSTRAINT [PK_{objectQualifier}Visitors] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) 
@@ -84,7 +83,7 @@ GO
 ALTER TABLE {databaseOwner}[{objectQualifier}Visits] CHECK CONSTRAINT [FK_{objectQualifier}Visits_Visitors]
 GO
 
-IF (SELECT 1 FROM {databaseOwner}[{objectQualifier}Schedule] WHERE [TypeFullName] = N'Dnn.WebAnalytics.VisitorJob, Dnn.WebAnalytics')
+IF EXISTS(SELECT 1 FROM {databaseOwner}[{objectQualifier}Schedule] WHERE [TypeFullName] = N'Dnn.WebAnalytics.VisitorJob, Dnn.WebAnalytics')
 BEGIN
 	UPDATE {databaseOwner}[{objectQualifier}Schedule] 
 	SET 

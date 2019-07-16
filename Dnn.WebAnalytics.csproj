@@ -48,6 +48,11 @@
       <HintPath>..\..\bin\DotNetNuke.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DotNetNuke.Instrumentation">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\DotNetNuke.Instrumentation.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DotNetNuke.Web">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\DotNetNuke.Web.dll</HintPath>
@@ -80,6 +85,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -92,23 +98,29 @@
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Http">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\System.Web.Http.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="Telerik.Web.UI, Version=2013.2.717.40, Culture=neutral, PublicKeyToken=121fae78165ba3d4, processorArchitecture=MSIL">
+    <Reference Include="Telerik.Web.UI">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\Telerik.Web.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\FeatureController.cs" />
     <Compile Include="Components\VisitorTracker.cs" />
     <Compile Include="Controllers\MapController.cs" />
     <Compile Include="Controllers\VisitController.cs" />
     <Compile Include="DTOs\MapDTO.cs" />
+    <Compile Include="Entities\VisitorInfo.cs" />
+    <Compile Include="Entities\VisitInfo.cs" />
+    <Compile Include="Entities\VisitorRepo.cs" />
+    <Compile Include="Entities\VisitRepo.cs" />
     <Compile Include="Map.ascx.cs">
       <DependentUpon>Map.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -133,11 +145,6 @@
     <Compile Include="RouteMapper.cs" />
     <Compile Include="SchedulerJobs\VisitorJob.cs" />
     <Compile Include="Controllers\VisitorController.cs" />
-    <Compile Include="DAL\WebAnalytics.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>WebAnalytics.dbml</DependentUpon>
-    </Compile>
     <Compile Include="DTOs\VisitDTO.cs" />
     <Compile Include="DTOs\VisitorDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -158,6 +165,8 @@
     <Content Include="plugins\angular-chart\angular-chart.js" />
     <Content Include="plugins\angular-chart\angular-chart.min.js" />
     <Content Include="plugins\lodash\lodash.js" />
+    <Content Include="Scripts\Uninstall.sql" />
+    <Content Include="Scripts\01.01.00.sql" />
     <Content Include="View.ascx" />
     <Content Include="plugins\angular-toastr\angular-toastr.min.css" />
     <Content Include="plugins\angular-toastr\angular-toastr.tpls.min.js" />
@@ -173,14 +182,6 @@
     <Content Include="Dnn.WebAnalytics.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="DAL\WebAnalytics.dbml">
-      <Generator>MSLinqToSQLGenerator</Generator>
-      <LastGenOutput>WebAnalytics.designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </Content>
-    <None Include="DAL\WebAnalytics.dbml.layout">
-      <DependentUpon>WebAnalytics.dbml</DependentUpon>
-    </None>
     <Content Include="Dnn.VisitorsOnline.dnn" />
     <Content Include="Dnn.WebAnalytics.dnn" />
     <None Include="packages.config" />

@@ -1,11 +1,9 @@
-﻿using DotNetNuke.Security;
+﻿using DotNetNuke.Instrumentation;
+using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Linq.Dynamic;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -16,29 +14,31 @@ namespace Dnn.WebAnalytics
     [ValidateAntiForgeryToken]
     public class VisitorController : DnnApiController
     {
-        DataContext dc = new DataContext();
+        private static readonly ILog Logger = LoggerSource.Instance.GetLogger(typeof(VisitorController));
+        private VisitorInfoRepo visitorRepo = new VisitorInfoRepo();
 
         [NonAction]
-        public VisitorDTO ConvertItemToDto(Visitor item)
+        public VisitorDTO ConvertItemToDto(VisitorInfo item)
         {
-            VisitorDTO dto = new VisitorDTO();
+            VisitorDTO dto = new VisitorDTO
+            {
+                id = item.id,
+                portal_id = item.portal_id,
+                user_id = item.user_id,
+                created_on_date = item.created_on_date,
 
-            dto.id = item.id;
-            dto.portal_id = item.portal_id;
-            dto.user_id = item.user_id;
-            dto.created_on_date = item.created_on_date;
-
-            dto.user_username = item.User.Username;
-            dto.user_displayname = item.User.DisplayName;
+                user_username = item.User.Username,
+                user_displayname = item.User.DisplayName
+            };
 
             return dto;
         }
         [NonAction]
-        public Visitor ConvertDtoToItem(Visitor item, VisitorDTO dto)
+        public VisitorInfo ConvertDtoToItem(VisitorInfo item, VisitorDTO dto)
         {
             if (item == null)
             {
-                item = new Visitor();
+                item = new VisitorInfo();
             }
 
             if (dto == null)
@@ -63,8 +63,8 @@ namespace Dnn.WebAnalytics
             {
                 List<VisitorDTO> dtos = new List<VisitorDTO>();
 
-                var visitors = dc.Visitors.ToList();
-                foreach (Visitor visitor in visitors)
+                var visitors = visitorRepo.GetItemsAll();
+                foreach (VisitorInfo visitor in visitors)
                 {
                     VisitorDTO visitorDTO = ConvertItemToDto(visitor);
                     dtos.Add(visitorDTO);
@@ -73,6 +73,7 @@ namespace Dnn.WebAnalytics
             }
             catch (Exception ex)
             {
+                Logger.Error(ex.Message, ex);
                 Exceptions.LogException(ex);
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex);
             }
@@ -85,7 +86,7 @@ namespace Dnn.WebAnalytics
         {
             try
             {
-                Visitor item = dc.Visitors.Where(i => i.id == id).SingleOrDefault();
+                VisitorInfo item = visitorRepo.GetItemById(id);
 
                 if (item == null)
                 {
@@ -96,6 +97,7 @@ namespace Dnn.WebAnalytics
             }
             catch (Exception ex)
             {
+                Logger.Error(ex.Message, ex);
                 Exceptions.LogException(ex);
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex);
             }
@@ -113,6 +115,7 @@ namespace Dnn.WebAnalytics
             }
             catch (Exception ex)
             {
+                Logger.Error(ex.Message, ex);
                 Exceptions.LogException(ex);
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex);
             }
@@ -130,6 +133,7 @@ namespace Dnn.WebAnalytics
             }
             catch (Exception ex)
             {
+                Logger.Error(ex.Message, ex);
                 Exceptions.LogException(ex);
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex);
             }
@@ -141,20 +145,20 @@ namespace Dnn.WebAnalytics
         {
             try
             {
-                Visitor item = dc.Visitors.Where(i => i.id == id).SingleOrDefault();
+                VisitorInfo item = visitorRepo.GetItemById(id);
 
                 if (item == null)
                 {
                     return Request.CreateResponse(HttpStatusCode.NotFound);
                 }
 
-                dc.Visitors.DeleteOnSubmit(item);
-                dc.SubmitChanges();
+                visitorRepo.DeleteItem(item);
 
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
             catch (Exception ex)
             {
+                Logger.Error(ex.Message, ex);
                 Exceptions.LogException(ex);
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex);
             }
@@ -163,19 +167,15 @@ namespace Dnn.WebAnalytics
         [NonAction]
         public VisitorDTO SaveVisitor(VisitorDTO dto)
         {
-            Visitor visitor = dc.Visitors.Where(i => i.id == dto.id).SingleOrDefault();
+            VisitorInfo visitor = visitorRepo.GetItemById(dto.id);
 
             if (visitor == null)
             {
                 visitor = ConvertDtoToItem(null, dto);
                 visitor.created_on_date = DateTime.Now;
 
-                dc.Visitors.InsertOnSubmit(visitor);
+                visitor = visitorRepo.CreateItem(visitor);
             }
-
-            visitor = ConvertDtoToItem(visitor, dto);
-
-            dc.SubmitChanges();
 
             return ConvertItemToDto(visitor);
         }             

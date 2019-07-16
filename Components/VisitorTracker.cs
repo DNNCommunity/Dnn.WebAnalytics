@@ -2,17 +2,17 @@ using System;
 using System.Web;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
-using System.Linq;
+using DotNetNuke.Instrumentation;
 using DotNetNuke.Services.Exceptions;
 
 namespace Dnn.WebAnalytics
 {
     public class VisitorTracker : IHttpModule
     {
+        private static readonly ILog Logger = LoggerSource.Instance.GetLogger(typeof(VisitorTracker));
         private System.Text.RegularExpressions.Regex UserAgentFilter = new System.Text.RegularExpressions.Regex(VisitController.UserAgentFilter, System.Text.RegularExpressions.RegexOptions.Compiled | System.Text.RegularExpressions.RegexOptions.IgnoreCase);
         VisitController visitController = new VisitController();
-        VisitorController visitorController = new VisitorController();
-        DataContext dc = new DataContext();
+        private VisitorInfoRepo visitorRepo = new VisitorInfoRepo();
 
         public string ModuleName
         {
@@ -52,14 +52,14 @@ namespace Dnn.WebAnalytics
                 }
 
                 // update/create visitor 
-                var visitor = dc.Visitors.Where(i => i.id == visitor_id).SingleOrDefault();
+                var visitor = visitorRepo.GetItem(visitor_id, _portalSettings.PortalId);
                 if (visitor == null)
                 { // create Visitor record 
-                    visitor = new Visitor()
+                    visitor = new VisitorInfo()
                     {
                         created_on_date = DateTime.Now
                     };
-                    dc.Visitors.InsertOnSubmit(visitor);
+                    visitorRepo.CreateItem(visitor);
                 }
 
                 // get User if authenticated
@@ -77,7 +77,7 @@ namespace Dnn.WebAnalytics
                 {
                     visitor.user_id = user_id;
                 }
-                dc.SubmitChanges();
+                visitorRepo.UpdateItem(visitor);
 
                 // only process requests for content pages
                 if (_portalSettings != null && Request.Url.LocalPath.ToLower().EndsWith("default.aspx"))
@@ -170,28 +170,28 @@ namespace Dnn.WebAnalytics
                         string user_agent = Request.UserAgent;
 
                         // create visit object
-                        VisitDTO visitDTO = new VisitDTO()
+                        var visitDto = new VisitDTO()
                         {
                             date = DateTime.Now,
                             visitor_id = visitor.id,
                             tab_id = _portalSettings.ActiveTab.TabID,
                             ip = ip,
-                            country = "",
-                            region = "",
-                            city = "",
-                            latitude = "",
-                            longitude = "",
+                            country = string.Empty,
+                            region = string.Empty,
+                            city = string.Empty,
+                            latitude = string.Empty,
+                            longitude = string.Empty,
                             language = language,
                             domain = domain,
                             url = url,
                             user_agent = user_agent,
                             device_type = "Desktop",
-                            device = "",
-                            platform = "",
-                            browser = "",
+                            device = string.Empty,
+                            platform = string.Empty,
+                            browser = string.Empty,
                             referrer_domain = domain_referrer,
                             referrer_url = url_referrer,
-                            server = "",
+                            server = string.Empty,
                             activity = "click",
                             campaign = campaign,
                             session_id = session_id,
@@ -199,17 +199,18 @@ namespace Dnn.WebAnalytics
                             last_request_id = last_request_id
                         };
 
-                        visitDTO = visitController.ProcessVisit(visitDTO);
+                        visitDto = visitController.ProcessVisit(visitDto);
 
-                        Visit visit = visitController.ConvertDtoToItem(null, visitDTO);
+                        VisitInfo visit = visitController.ConvertDtoToItem(null, visitDto);
 
-                        dc.Visits.InsertOnSubmit(visit);
-                        dc.SubmitChanges();
+                        var repo = new VisitInfoRepo();
+                        repo.CreateItem(visit);
                     }
                 }
             }
             catch (Exception ex)
             {
+                Logger.Error(ex.Message, ex);
                 Exceptions.LogException(ex);
             }
         }
