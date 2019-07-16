@@ -1,4 +1,8 @@
 
+IF NOT OBJECT_ID('{databaseOwner}[{objectQualifier}Visitors]') IS NULL
+    DROP TABLE {databaseOwner}[{objectQualifier}Visitors];
+GO
+
 CREATE TABLE {databaseOwner}[{objectQualifier}Visitors](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[portal_id] [int] NOT NULL,
@@ -9,6 +13,10 @@ CREATE TABLE {databaseOwner}[{objectQualifier}Visitors](
 	[id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) 
 ) 
+GO
+
+IF NOT OBJECT_ID('{databaseOwner}[{objectQualifier}Visitors]') IS NULL
+    DROP TABLE {databaseOwner}[{objectQualifier}Visits];
 GO
 
 CREATE TABLE {databaseOwner}[{objectQualifier}Visits](
@@ -76,8 +84,28 @@ GO
 ALTER TABLE {databaseOwner}[{objectQualifier}Visits] CHECK CONSTRAINT [FK_{objectQualifier}Visits_Visitors]
 GO
 
-
-INSERT INTO {databaseOwner}[{objectQualifier}Schedule]
-	( TypeFullName, [TimeLapse], [TimeLapseMeasurement], [RetryTimeLapse], [RetryTimeLapseMeasurement], [RetainHistoryNum], [AttachToEvent], [CatchUpEnabled], [Enabled], [ObjectDependencies], [Servers], [FriendlyName])
-VALUES ( 'Dnn.WebAnalytics.VisitorJob, Dnn.WebAnalytics', 1, 'd', 1, 'd', 10, '', 0, 1, '', null, 'Visitor Tracking Job' )
+IF (SELECT 1 FROM {databaseOwner}[{objectQualifier}Schedule] WHERE [TypeFullName] = N'Dnn.WebAnalytics.VisitorJob, Dnn.WebAnalytics')
+BEGIN
+	UPDATE {databaseOwner}[{objectQualifier}Schedule] 
+	SET 
+		[TimeLapse] = 1, 
+		[TimeLapseMeasurement] = N'd', 
+		[RetryTimeLapse] = 1, 
+		[RetryTimeLapseMeasurement] = N'd', 
+		[RetainHistoryNum] = 10, 
+		[AttachToEvent] = N'', 
+		[CatchUpEnabled] = 0, 
+		[Enabled] = 1, 
+		[ObjectDependencies] = N'', 
+		[Servers] = null, 
+		[FriendlyName] = 'Visitor Tracking Job' 
+	WHERE 
+		[TypeFullName] = N'Dnn.WebAnalytics.VisitorJob, Dnn.WebAnalytics';
+END
+ELSE
+BEGIN
+	INSERT INTO {databaseOwner}[{objectQualifier}Schedule]
+		( [TypeFullName], [TimeLapse], [TimeLapseMeasurement], [RetryTimeLapse], [RetryTimeLapseMeasurement], [RetainHistoryNum], [AttachToEvent], [CatchUpEnabled], [Enabled], [ObjectDependencies], [Servers], [FriendlyName])
+	VALUES ( 'Dnn.WebAnalytics.VisitorJob, Dnn.WebAnalytics', 1, 'd', 1, 'd', 10, '', 0, 1, '', null, 'Visitor Tracking Job' );
+END
 GO
