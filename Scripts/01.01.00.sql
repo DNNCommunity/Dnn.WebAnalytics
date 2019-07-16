@@ -32,13 +32,19 @@ IF EXISTS (SELECT 1
 GO
 
 /*
-	Rename community tables to prevent conflicts and group the data together
+	Rename community tables & PK's to prevent conflicts and group the data together
 */
 
 sp_rename N'{objectQualifier}Visitors', N'{objectQualifier}Community_Visitors';
 GO
 
+sp_rename @objname = N'[PK_{objectQualifier}Visitors]', @newname = N'PK_{objectQualifier}Community_Visitors';
+GO
+
 sp_rename N'{objectQualifier}Visits', N'{objectQualifier}Community_Visits';
+GO
+
+sp_rename @objname = N'[PK_{objectQualifier}Visits]', @newname = N'PK_{objectQualifier}Community_Visits';
 GO
 
 /*
