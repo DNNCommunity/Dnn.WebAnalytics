@@ -19,7 +19,7 @@ namespace Dnn.WebAnalytics
         DataContext dc = new DataContext();
 
         [NonAction]
-        public VisitorDTO ConvertItemToDto(Visitor item)
+        public VisitorDTO ConvertItemToDto(Community_Visitor item)
         {
             VisitorDTO dto = new VisitorDTO();
 
@@ -34,11 +34,11 @@ namespace Dnn.WebAnalytics
             return dto;
         }
         [NonAction]
-        public Visitor ConvertDtoToItem(Visitor item, VisitorDTO dto)
+        public Community_Visitor ConvertDtoToItem(Community_Visitor item, VisitorDTO dto)
         {
             if (item == null)
             {
-                item = new Visitor();
+                item = new Community_Visitor();
             }
 
             if (dto == null)
@@ -63,8 +63,8 @@ namespace Dnn.WebAnalytics
             {
                 List<VisitorDTO> dtos = new List<VisitorDTO>();
 
-                var visitors = dc.Visitors.ToList();
-                foreach (Visitor visitor in visitors)
+                var visitors = dc.Community_Visitors.ToList();
+                foreach (Community_Visitor visitor in visitors)
                 {
                     VisitorDTO visitorDTO = ConvertItemToDto(visitor);
                     dtos.Add(visitorDTO);
@@ -85,7 +85,7 @@ namespace Dnn.WebAnalytics
         {
             try
             {
-                Visitor item = dc.Visitors.Where(i => i.id == id).SingleOrDefault();
+                Community_Visitor item = dc.Community_Visitors.Where(i => i.id == id).SingleOrDefault();
 
                 if (item == null)
                 {
@@ -141,14 +141,14 @@ namespace Dnn.WebAnalytics
         {
             try
             {
-                Visitor item = dc.Visitors.Where(i => i.id == id).SingleOrDefault();
+                Community_Visitor item = dc.Community_Visitors.Where(i => i.id == id).SingleOrDefault();
 
                 if (item == null)
                 {
                     return Request.CreateResponse(HttpStatusCode.NotFound);
                 }
 
-                dc.Visitors.DeleteOnSubmit(item);
+                dc.Community_Visitors.DeleteOnSubmit(item);
                 dc.SubmitChanges();
 
                 return Request.CreateResponse(HttpStatusCode.OK);
@@ -163,14 +163,14 @@ namespace Dnn.WebAnalytics
         [NonAction]
         public VisitorDTO SaveVisitor(VisitorDTO dto)
         {
-            Visitor visitor = dc.Visitors.Where(i => i.id == dto.id).SingleOrDefault();
+            Community_Visitor visitor = dc.Community_Visitors.Where(i => i.id == dto.id).SingleOrDefault();
 
             if (visitor == null)
             {
                 visitor = ConvertDtoToItem(null, dto);
                 visitor.created_on_date = DateTime.Now;
 
-                dc.Visitors.InsertOnSubmit(visitor);
+                dc.Community_Visitors.InsertOnSubmit(visitor);
             }
 
             visitor = ConvertDtoToItem(visitor, dto);
