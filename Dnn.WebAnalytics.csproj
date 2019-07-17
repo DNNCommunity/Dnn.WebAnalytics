@@ -158,6 +158,7 @@
     <Content Include="plugins\angular-chart\angular-chart.js" />
     <Content Include="plugins\angular-chart\angular-chart.min.js" />
     <Content Include="plugins\lodash\lodash.js" />
+    <Content Include="Scripts\01.01.00.sql" />
     <Content Include="View.ascx" />
     <Content Include="plugins\angular-toastr\angular-toastr.min.css" />
     <Content Include="plugins\angular-toastr\angular-toastr.tpls.min.js" />

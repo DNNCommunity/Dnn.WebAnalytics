@@ -22,7 +22,7 @@ namespace Dnn.WebAnalytics
         public static string UserAgentFilter = "bot|crawl|spider|sbider|ask|slurp|larbin|search|indexer|archiver|nutch|capture|scanalert";
 
         [NonAction]
-        public VisitDTO ConvertItemToDto(Visit item)
+        public VisitDTO ConvertItemToDto(Community_Visit item)
         {
             VisitDTO dto = new VisitDTO();
 
@@ -55,11 +55,11 @@ namespace Dnn.WebAnalytics
             return dto;
         }
         [NonAction]
-        public Visit ConvertDtoToItem(Visit item, VisitDTO dto)
+        public Community_Visit ConvertDtoToItem(Community_Visit item, VisitDTO dto)
         {
             if (item == null)
             {
-                item = new Visit();
+                item = new Community_Visit();
             }
 
             if (dto == null)
@@ -105,9 +105,9 @@ namespace Dnn.WebAnalytics
             {
                 List<VisitDTO> dtos = new List<VisitDTO>();
 
-                var query = dc.Visits.AsQueryable();
+                var query = dc.Community_Visits.AsQueryable();
 
-                foreach (Visit item in query)
+                foreach (Community_Visit item in query)
                 {
                     VisitDTO dto = ConvertItemToDto(item);
                     dtos.Add(dto);
@@ -129,7 +129,7 @@ namespace Dnn.WebAnalytics
         {
             try
             {
-                Visit item = dc.Visits.Where(i => i.id == id).SingleOrDefault();
+                Community_Visit item = dc.Community_Visits.Where(i => i.id == id).SingleOrDefault();
 
                 if (item == null)
                 {
@@ -151,7 +151,7 @@ namespace Dnn.WebAnalytics
         {
             try
             {
-                var query = dc.Visits.Where(i => i.Tab.PortalID == portal_id);
+                var query = dc.Community_Visits.Where(i => i.Tab.PortalID == portal_id);
 
                 if (period_start.HasValue)
                 {
@@ -170,7 +170,7 @@ namespace Dnn.WebAnalytics
                     view_count = list.Count(),
                     visit_count = list.Select(i => i.session_id).Distinct().Count(),
                     visitor_count = list.Select(i => i.visitor_id).Distinct().Count(),
-                    user_count = list.Where(i => i.Visitor.user_id.HasValue).Select(i => i.visitor_id).Distinct().Count(),
+                    user_count = list.Where(i => i.Community_Visitor.user_id.HasValue).Select(i => i.visitor_id).Distinct().Count(),
 
                     views = GetViews(portal_id, period_start, period_end),
                     visits = GetVisits(portal_id, period_start, period_end),
@@ -195,7 +195,7 @@ namespace Dnn.WebAnalytics
             {
                 List<ReportDTO> results = new List<ReportDTO>();
 
-                var query = dc.Visits.Where(i => i.Tab.PortalID == portal_id );
+                var query = dc.Community_Visits.Where(i => i.Tab.PortalID == portal_id);
 
                 if (period_start.HasValue)
                 {
@@ -209,7 +209,7 @@ namespace Dnn.WebAnalytics
 
                 var list = query.ToList();
 
-                IEnumerable<IGrouping<string, Visit>> grouped = null;
+                IEnumerable<IGrouping<string, Community_Visit>> grouped = null;
 
                 switch (field)
                 {
@@ -230,7 +230,7 @@ namespace Dnn.WebAnalytics
                         break;
 
                     case "user":
-                        grouped = list.Where(i => i.Visitor.user_id.HasValue).GroupBy(i => i.Visitor.User.DisplayName);
+                        grouped = list.Where(i => i.Community_Visitor.user_id.HasValue).GroupBy(i => i.Community_Visitor.User.DisplayName);
                         break;
 
                     case "page":
@@ -372,14 +372,14 @@ namespace Dnn.WebAnalytics
         {
             try
             {
-                Visit item = dc.Visits.Where(i => i.id == id).SingleOrDefault();
+                Community_Visit item = dc.Community_Visits.Where(i => i.id == id).SingleOrDefault();
 
                 if (item == null)
                 {
                     return Request.CreateResponse(HttpStatusCode.NotFound);
                 }
 
-                dc.Visits.DeleteOnSubmit(item);
+                dc.Community_Visits.DeleteOnSubmit(item);
                 dc.SubmitChanges();
 
                 return Request.CreateResponse(HttpStatusCode.OK);
@@ -389,18 +389,18 @@ namespace Dnn.WebAnalytics
                 Exceptions.LogException(ex);
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex);
             }
-        }        
+        }
 
         [NonAction]
         public VisitDTO SaveVisit(VisitDTO dto)
         {
-            Visit visit = dc.Visits.Where(i => i.id == dto.id).SingleOrDefault();
+            Community_Visit visit = dc.Community_Visits.Where(i => i.id == dto.id).SingleOrDefault();
 
             if (visit == null)
             {
                 visit = ConvertDtoToItem(null, dto);
 
-                dc.Visits.InsertOnSubmit(visit);
+                dc.Community_Visits.InsertOnSubmit(visit);
             }
 
             visit = ConvertDtoToItem(visit, dto);
@@ -414,7 +414,7 @@ namespace Dnn.WebAnalytics
         //public void WriteVisits()
         //{
         //    List<VisitDTO> visit_dtos = new List<VisitDTO>();
-                        
+
         //    // dictionary to store visitors to update
         //    Dictionary<int, Nullable<int>> dicVisitors = new Dictionary<int, Nullable<int>>();
 
@@ -446,7 +446,7 @@ namespace Dnn.WebAnalytics
 
         //        HttpRuntime.Cache.Remove(Key);                
         //    }
-            
+
         //    //// iterate through all visitors that need to be updated
         //    //foreach (KeyValuePair<int, Nullable<int>> kvp in dicVisitors)
         //    //{
@@ -560,15 +560,15 @@ namespace Dnn.WebAnalytics
         public void PurgeVisits()
         {
             // delete all visit history older than 90 days
-            List<Visit> visits = dc.Visits.Where(i => i.date.Date < DateTime.Now.AddDays(-90).Date).ToList();
-            dc.Visits.DeleteAllOnSubmit(visits);
+            List<Community_Visit> visits = dc.Community_Visits.Where(i => i.date.Date < DateTime.Now.AddDays(-90).Date).ToList();
+            dc.Community_Visits.DeleteAllOnSubmit(visits);
             dc.SubmitChanges();
         }
-            
+
         [NonAction]
         public List<DateCountDTO> GetViews(int portal_id, Nullable<DateTime> start_date, Nullable<DateTime> end_date)
         {
-            var query = dc.Visits.Where(i => i.Tab.PortalID == portal_id);
+            var query = dc.Community_Visits.Where(i => i.Tab.PortalID == portal_id);
 
             if (start_date.HasValue)
             {
@@ -598,7 +598,7 @@ namespace Dnn.WebAnalytics
         [NonAction]
         public List<DateCountDTO> GetVisits(int portal_id, Nullable<DateTime> start_date, Nullable<DateTime> end_date)
         {
-            var query = dc.Visits.Where(i => i.Tab.PortalID == portal_id);
+            var query = dc.Community_Visits.Where(i => i.Tab.PortalID == portal_id);
 
             if (start_date.HasValue)
             {
@@ -628,7 +628,7 @@ namespace Dnn.WebAnalytics
         [NonAction]
         public List<DateCountDTO> GetVisitors(int portal_id, Nullable<DateTime> start_date, Nullable<DateTime> end_date)
         {
-            var query = dc.Visits.Where(i => i.Tab.PortalID == portal_id);
+            var query = dc.Community_Visits.Where(i => i.Tab.PortalID == portal_id);
 
             if (start_date.HasValue)
             {
@@ -658,7 +658,7 @@ namespace Dnn.WebAnalytics
         [NonAction]
         public List<DateCountDTO> GetUsers(int portal_id, Nullable<DateTime> start_date, Nullable<DateTime> end_date)
         {
-            var query = dc.Visits.Where(i => i.Tab.PortalID == portal_id);
+            var query = dc.Community_Visits.Where(i => i.Tab.PortalID == portal_id);
 
             if (start_date.HasValue)
             {
@@ -677,7 +677,7 @@ namespace Dnn.WebAnalytics
                .Select(i => new DateCountDTO()
                {
                    date = i.Key,
-                   count = i.Select(o => o.Visitor.user_id).Distinct().Count()
+                   count = i.Select(o => o.Community_Visitor.user_id).Distinct().Count()
                })
                .OrderBy(i => i.date)
                .ToList();

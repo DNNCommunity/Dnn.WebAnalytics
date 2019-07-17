@@ -36,15 +36,15 @@ namespace Dnn.WebAnalytics
     partial void InsertTab(Tab instance);
     partial void UpdateTab(Tab instance);
     partial void DeleteTab(Tab instance);
-    partial void InsertVisitor(Visitor instance);
-    partial void UpdateVisitor(Visitor instance);
-    partial void DeleteVisitor(Visitor instance);
     partial void InsertUser(User instance);
     partial void UpdateUser(User instance);
     partial void DeleteUser(User instance);
-    partial void InsertVisit(Visit instance);
-    partial void UpdateVisit(Visit instance);
-    partial void DeleteVisit(Visit instance);
+    partial void InsertCommunity_Visit(Community_Visit instance);
+    partial void UpdateCommunity_Visit(Community_Visit instance);
+    partial void DeleteCommunity_Visit(Community_Visit instance);
+    partial void InsertCommunity_Visitor(Community_Visitor instance);
+    partial void UpdateCommunity_Visitor(Community_Visitor instance);
+    partial void DeleteCommunity_Visitor(Community_Visitor instance);
     #endregion
 		
 		public DataContext() : 
@@ -93,14 +93,6 @@ namespace Dnn.WebAnalytics
 			}
 		}
 		
-		public System.Data.Linq.Table<Visitor> Visitors
-		{
-			get
-			{
-				return this.GetTable<Visitor>();
-			}
-		}
-		
 		public System.Data.Linq.Table<User> Users
 		{
 			get
@@ -109,11 +101,19 @@ namespace Dnn.WebAnalytics
 			}
 		}
 		
-		public System.Data.Linq.Table<Visit> Visits
+		public System.Data.Linq.Table<Community_Visit> Community_Visits
 		{
 			get
 			{
-				return this.GetTable<Visit>();
+				return this.GetTable<Community_Visit>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Community_Visitor> Community_Visitors
+		{
+			get
+			{
+				return this.GetTable<Community_Visitor>();
 			}
 		}
 	}
@@ -176,7 +176,7 @@ namespace Dnn.WebAnalytics
 		
 		private EntitySet<Tab> _Tabs;
 		
-		private EntitySet<Visitor> _Visitors;
+		private EntitySet<Community_Visitor> _Community_Visitors;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -237,7 +237,7 @@ namespace Dnn.WebAnalytics
 		public Portal()
 		{
 			this._Tabs = new EntitySet<Tab>(new Action<Tab>(this.attach_Tabs), new Action<Tab>(this.detach_Tabs));
-			this._Visitors = new EntitySet<Visitor>(new Action<Visitor>(this.attach_Visitors), new Action<Visitor>(this.detach_Visitors));
+			this._Community_Visitors = new EntitySet<Community_Visitor>(new Action<Community_Visitor>(this.attach_Community_Visitors), new Action<Community_Visitor>(this.detach_Community_Visitors));
 			OnCreated();
 		}
 		
@@ -754,16 +754,16 @@ namespace Dnn.WebAnalytics
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Portal_Visitor", Storage="_Visitors", ThisKey="PortalID", OtherKey="portal_id")]
-		public EntitySet<Visitor> Visitors
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Portal_Community_Visitor", Storage="_Community_Visitors", ThisKey="PortalID", OtherKey="portal_id")]
+		public EntitySet<Community_Visitor> Community_Visitors
 		{
 			get
 			{
-				return this._Visitors;
+				return this._Community_Visitors;
 			}
 			set
 			{
-				this._Visitors.Assign(value);
+				this._Community_Visitors.Assign(value);
 			}
 		}
 		
@@ -799,13 +799,13 @@ namespace Dnn.WebAnalytics
 			entity.Portal = null;
 		}
 		
-		private void attach_Visitors(Visitor entity)
+		private void attach_Community_Visitors(Community_Visitor entity)
 		{
 			this.SendPropertyChanging();
 			entity.Portal = this;
 		}
 		
-		private void detach_Visitors(Visitor entity)
+		private void detach_Community_Visitors(Community_Visitor entity)
 		{
 			this.SendPropertyChanging();
 			entity.Portal = null;
@@ -894,7 +894,7 @@ namespace Dnn.WebAnalytics
 		
 		private EntitySet<Tab> _Tabs;
 		
-		private EntitySet<Visit> _Visits;
+		private EntitySet<Community_Visit> _Community_Visits;
 		
 		private EntityRef<Portal> _Portal;
 		
@@ -983,7 +983,7 @@ namespace Dnn.WebAnalytics
 		public Tab()
 		{
 			this._Tabs = new EntitySet<Tab>(new Action<Tab>(this.attach_Tabs), new Action<Tab>(this.detach_Tabs));
-			this._Visits = new EntitySet<Visit>(new Action<Visit>(this.attach_Visits), new Action<Visit>(this.detach_Visits));
+			this._Community_Visits = new EntitySet<Community_Visit>(new Action<Community_Visit>(this.attach_Community_Visits), new Action<Community_Visit>(this.detach_Community_Visits));
 			this._Portal = default(EntityRef<Portal>);
 			this._Tab1 = default(EntityRef<Tab>);
 			OnCreated();
@@ -1750,16 +1750,16 @@ namespace Dnn.WebAnalytics
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Tab_Visit", Storage="_Visits", ThisKey="TabID", OtherKey="tab_id")]
-		public EntitySet<Visit> Visits
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Tab_Community_Visit", Storage="_Community_Visits", ThisKey="TabID", OtherKey="tab_id")]
+		public EntitySet<Community_Visit> Community_Visits
 		{
 			get
 			{
-				return this._Visits;
+				return this._Community_Visits;
 			}
 			set
 			{
-				this._Visits.Assign(value);
+				this._Community_Visits.Assign(value);
 			}
 		}
 		
@@ -1863,260 +1863,16 @@ namespace Dnn.WebAnalytics
 			entity.Tab1 = null;
 		}
 		
-		private void attach_Visits(Visit entity)
+		private void attach_Community_Visits(Community_Visit entity)
 		{
 			this.SendPropertyChanging();
 			entity.Tab = this;
 		}
 		
-		private void detach_Visits(Visit entity)
+		private void detach_Community_Visits(Community_Visit entity)
 		{
 			this.SendPropertyChanging();
 			entity.Tab = null;
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Visitors")]
-	public partial class Visitor : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _id;
-		
-		private int _portal_id;
-		
-		private System.Nullable<int> _user_id;
-		
-		private System.DateTime _created_on_date;
-		
-		private EntitySet<Visit> _Visits;
-		
-		private EntityRef<Portal> _Portal;
-		
-		private EntityRef<User> _User;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnidChanging(int value);
-    partial void OnidChanged();
-    partial void Onportal_idChanging(int value);
-    partial void Onportal_idChanged();
-    partial void Onuser_idChanging(System.Nullable<int> value);
-    partial void Onuser_idChanged();
-    partial void Oncreated_on_dateChanging(System.DateTime value);
-    partial void Oncreated_on_dateChanged();
-    #endregion
-		
-		public Visitor()
-		{
-			this._Visits = new EntitySet<Visit>(new Action<Visit>(this.attach_Visits), new Action<Visit>(this.detach_Visits));
-			this._Portal = default(EntityRef<Portal>);
-			this._User = default(EntityRef<User>);
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int id
-		{
-			get
-			{
-				return this._id;
-			}
-			set
-			{
-				if ((this._id != value))
-				{
-					this.OnidChanging(value);
-					this.SendPropertyChanging();
-					this._id = value;
-					this.SendPropertyChanged("id");
-					this.OnidChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_portal_id", DbType="Int NOT NULL")]
-		public int portal_id
-		{
-			get
-			{
-				return this._portal_id;
-			}
-			set
-			{
-				if ((this._portal_id != value))
-				{
-					if (this._Portal.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.Onportal_idChanging(value);
-					this.SendPropertyChanging();
-					this._portal_id = value;
-					this.SendPropertyChanged("portal_id");
-					this.Onportal_idChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_user_id", DbType="Int")]
-		public System.Nullable<int> user_id
-		{
-			get
-			{
-				return this._user_id;
-			}
-			set
-			{
-				if ((this._user_id != value))
-				{
-					if (this._User.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.Onuser_idChanging(value);
-					this.SendPropertyChanging();
-					this._user_id = value;
-					this.SendPropertyChanged("user_id");
-					this.Onuser_idChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_created_on_date", DbType="DateTime NOT NULL")]
-		public System.DateTime created_on_date
-		{
-			get
-			{
-				return this._created_on_date;
-			}
-			set
-			{
-				if ((this._created_on_date != value))
-				{
-					this.Oncreated_on_dateChanging(value);
-					this.SendPropertyChanging();
-					this._created_on_date = value;
-					this.SendPropertyChanged("created_on_date");
-					this.Oncreated_on_dateChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Visitor_Visit", Storage="_Visits", ThisKey="id", OtherKey="visitor_id")]
-		public EntitySet<Visit> Visits
-		{
-			get
-			{
-				return this._Visits;
-			}
-			set
-			{
-				this._Visits.Assign(value);
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Portal_Visitor", Storage="_Portal", ThisKey="portal_id", OtherKey="PortalID", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
-		public Portal Portal
-		{
-			get
-			{
-				return this._Portal.Entity;
-			}
-			set
-			{
-				Portal previousValue = this._Portal.Entity;
-				if (((previousValue != value) 
-							|| (this._Portal.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Portal.Entity = null;
-						previousValue.Visitors.Remove(this);
-					}
-					this._Portal.Entity = value;
-					if ((value != null))
-					{
-						value.Visitors.Add(this);
-						this._portal_id = value.PortalID;
-					}
-					else
-					{
-						this._portal_id = default(int);
-					}
-					this.SendPropertyChanged("Portal");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Visitor", Storage="_User", ThisKey="user_id", OtherKey="UserID", IsForeignKey=true, DeleteRule="CASCADE")]
-		public User User
-		{
-			get
-			{
-				return this._User.Entity;
-			}
-			set
-			{
-				User previousValue = this._User.Entity;
-				if (((previousValue != value) 
-							|| (this._User.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._User.Entity = null;
-						previousValue.Visitors.Remove(this);
-					}
-					this._User.Entity = value;
-					if ((value != null))
-					{
-						value.Visitors.Add(this);
-						this._user_id = value.UserID;
-					}
-					else
-					{
-						this._user_id = default(Nullable<int>);
-					}
-					this.SendPropertyChanged("User");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		
-		private void attach_Visits(Visit entity)
-		{
-			this.SendPropertyChanging();
-			entity.Visitor = this;
-		}
-		
-		private void detach_Visits(Visit entity)
-		{
-			this.SendPropertyChanging();
-			entity.Visitor = null;
 		}
 	}
 	
@@ -2160,7 +1916,7 @@ namespace Dnn.WebAnalytics
 		
 		private System.Nullable<System.DateTime> _PasswordResetExpiration;
 		
-		private EntitySet<Visitor> _Visitors;
+		private EntitySet<Community_Visitor> _Community_Visitors;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -2204,7 +1960,7 @@ namespace Dnn.WebAnalytics
 		
 		public User()
 		{
-			this._Visitors = new EntitySet<Visitor>(new Action<Visitor>(this.attach_Visitors), new Action<Visitor>(this.detach_Visitors));
+			this._Community_Visitors = new EntitySet<Community_Visitor>(new Action<Community_Visitor>(this.attach_Community_Visitors), new Action<Community_Visitor>(this.detach_Community_Visitors));
 			OnCreated();
 		}
 		
@@ -2548,16 +2304,16 @@ namespace Dnn.WebAnalytics
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Visitor", Storage="_Visitors", ThisKey="UserID", OtherKey="user_id")]
-		public EntitySet<Visitor> Visitors
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Community_Visitor", Storage="_Community_Visitors", ThisKey="UserID", OtherKey="user_id")]
+		public EntitySet<Community_Visitor> Community_Visitors
 		{
 			get
 			{
-				return this._Visitors;
+				return this._Community_Visitors;
 			}
 			set
 			{
-				this._Visitors.Assign(value);
+				this._Community_Visitors.Assign(value);
 			}
 		}
 		
@@ -2581,21 +2337,21 @@ namespace Dnn.WebAnalytics
 			}
 		}
 		
-		private void attach_Visitors(Visitor entity)
+		private void attach_Community_Visitors(Community_Visitor entity)
 		{
 			this.SendPropertyChanging();
 			entity.User = this;
 		}
 		
-		private void detach_Visitors(Visitor entity)
+		private void detach_Community_Visitors(Community_Visitor entity)
 		{
 			this.SendPropertyChanging();
 			entity.User = null;
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Visits")]
-	public partial class Visit : INotifyPropertyChanging, INotifyPropertyChanged
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Community_Visits")]
+	public partial class Community_Visit : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		
 		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
@@ -2652,7 +2408,7 @@ namespace Dnn.WebAnalytics
 		
 		private EntityRef<Tab> _Tab;
 		
-		private EntityRef<Visitor> _Visitor;
+		private EntityRef<Community_Visitor> _Community_Visitor;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -2710,10 +2466,10 @@ namespace Dnn.WebAnalytics
     partial void Onlast_request_idChanged();
     #endregion
 		
-		public Visit()
+		public Community_Visit()
 		{
 			this._Tab = default(EntityRef<Tab>);
-			this._Visitor = default(EntityRef<Visitor>);
+			this._Community_Visitor = default(EntityRef<Community_Visitor>);
 			OnCreated();
 		}
 		
@@ -2768,7 +2524,7 @@ namespace Dnn.WebAnalytics
 			{
 				if ((this._visitor_id != value))
 				{
-					if (this._Visitor.HasLoadedOrAssignedValue)
+					if (this._Community_Visitor.HasLoadedOrAssignedValue)
 					{
 						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
 					}
@@ -3225,7 +2981,7 @@ namespace Dnn.WebAnalytics
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Tab_Visit", Storage="_Tab", ThisKey="tab_id", OtherKey="TabID", IsForeignKey=true)]
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Tab_Community_Visit", Storage="_Tab", ThisKey="tab_id", OtherKey="TabID", IsForeignKey=true)]
 		public Tab Tab
 		{
 			get
@@ -3242,12 +2998,12 @@ namespace Dnn.WebAnalytics
 					if ((previousValue != null))
 					{
 						this._Tab.Entity = null;
-						previousValue.Visits.Remove(this);
+						previousValue.Community_Visits.Remove(this);
 					}
 					this._Tab.Entity = value;
 					if ((value != null))
 					{
-						value.Visits.Add(this);
+						value.Community_Visits.Add(this);
 						this._tab_id = value.TabID;
 					}
 					else
@@ -3259,36 +3015,36 @@ namespace Dnn.WebAnalytics
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Visitor_Visit", Storage="_Visitor", ThisKey="visitor_id", OtherKey="id", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
-		public Visitor Visitor
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Community_Visitor_Community_Visit", Storage="_Community_Visitor", ThisKey="visitor_id", OtherKey="id", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
+		public Community_Visitor Community_Visitor
 		{
 			get
 			{
-				return this._Visitor.Entity;
+				return this._Community_Visitor.Entity;
 			}
 			set
 			{
-				Visitor previousValue = this._Visitor.Entity;
+				Community_Visitor previousValue = this._Community_Visitor.Entity;
 				if (((previousValue != value) 
-							|| (this._Visitor.HasLoadedOrAssignedValue == false)))
+							|| (this._Community_Visitor.HasLoadedOrAssignedValue == false)))
 				{
 					this.SendPropertyChanging();
 					if ((previousValue != null))
 					{
-						this._Visitor.Entity = null;
-						previousValue.Visits.Remove(this);
+						this._Community_Visitor.Entity = null;
+						previousValue.Community_Visits.Remove(this);
 					}
-					this._Visitor.Entity = value;
+					this._Community_Visitor.Entity = value;
 					if ((value != null))
 					{
-						value.Visits.Add(this);
+						value.Community_Visits.Add(this);
 						this._visitor_id = value.id;
 					}
 					else
 					{
 						this._visitor_id = default(int);
 					}
-					this.SendPropertyChanged("Visitor");
+					this.SendPropertyChanged("Community_Visitor");
 				}
 			}
 		}
@@ -3311,6 +3067,250 @@ namespace Dnn.WebAnalytics
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Community_Visitors")]
+	public partial class Community_Visitor : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private int _portal_id;
+		
+		private System.Nullable<int> _user_id;
+		
+		private System.DateTime _created_on_date;
+		
+		private EntitySet<Community_Visit> _Community_Visits;
+		
+		private EntityRef<Portal> _Portal;
+		
+		private EntityRef<User> _User;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void Onportal_idChanging(int value);
+    partial void Onportal_idChanged();
+    partial void Onuser_idChanging(System.Nullable<int> value);
+    partial void Onuser_idChanged();
+    partial void Oncreated_on_dateChanging(System.DateTime value);
+    partial void Oncreated_on_dateChanged();
+    #endregion
+		
+		public Community_Visitor()
+		{
+			this._Community_Visits = new EntitySet<Community_Visit>(new Action<Community_Visit>(this.attach_Community_Visits), new Action<Community_Visit>(this.detach_Community_Visits));
+			this._Portal = default(EntityRef<Portal>);
+			this._User = default(EntityRef<User>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_portal_id", DbType="Int NOT NULL")]
+		public int portal_id
+		{
+			get
+			{
+				return this._portal_id;
+			}
+			set
+			{
+				if ((this._portal_id != value))
+				{
+					if (this._Portal.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.Onportal_idChanging(value);
+					this.SendPropertyChanging();
+					this._portal_id = value;
+					this.SendPropertyChanged("portal_id");
+					this.Onportal_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_user_id", DbType="Int")]
+		public System.Nullable<int> user_id
+		{
+			get
+			{
+				return this._user_id;
+			}
+			set
+			{
+				if ((this._user_id != value))
+				{
+					if (this._User.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.Onuser_idChanging(value);
+					this.SendPropertyChanging();
+					this._user_id = value;
+					this.SendPropertyChanged("user_id");
+					this.Onuser_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_created_on_date", DbType="DateTime NOT NULL")]
+		public System.DateTime created_on_date
+		{
+			get
+			{
+				return this._created_on_date;
+			}
+			set
+			{
+				if ((this._created_on_date != value))
+				{
+					this.Oncreated_on_dateChanging(value);
+					this.SendPropertyChanging();
+					this._created_on_date = value;
+					this.SendPropertyChanged("created_on_date");
+					this.Oncreated_on_dateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Community_Visitor_Community_Visit", Storage="_Community_Visits", ThisKey="id", OtherKey="visitor_id")]
+		public EntitySet<Community_Visit> Community_Visits
+		{
+			get
+			{
+				return this._Community_Visits;
+			}
+			set
+			{
+				this._Community_Visits.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Portal_Community_Visitor", Storage="_Portal", ThisKey="portal_id", OtherKey="PortalID", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
+		public Portal Portal
+		{
+			get
+			{
+				return this._Portal.Entity;
+			}
+			set
+			{
+				Portal previousValue = this._Portal.Entity;
+				if (((previousValue != value) 
+							|| (this._Portal.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Portal.Entity = null;
+						previousValue.Community_Visitors.Remove(this);
+					}
+					this._Portal.Entity = value;
+					if ((value != null))
+					{
+						value.Community_Visitors.Add(this);
+						this._portal_id = value.PortalID;
+					}
+					else
+					{
+						this._portal_id = default(int);
+					}
+					this.SendPropertyChanged("Portal");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Community_Visitor", Storage="_User", ThisKey="user_id", OtherKey="UserID", IsForeignKey=true, DeleteRule="CASCADE")]
+		public User User
+		{
+			get
+			{
+				return this._User.Entity;
+			}
+			set
+			{
+				User previousValue = this._User.Entity;
+				if (((previousValue != value) 
+							|| (this._User.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._User.Entity = null;
+						previousValue.Community_Visitors.Remove(this);
+					}
+					this._User.Entity = value;
+					if ((value != null))
+					{
+						value.Community_Visitors.Add(this);
+						this._user_id = value.UserID;
+					}
+					else
+					{
+						this._user_id = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("User");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Community_Visits(Community_Visit entity)
+		{
+			this.SendPropertyChanging();
+			entity.Community_Visitor = this;
+		}
+		
+		private void detach_Community_Visits(Community_Visit entity)
+		{
+			this.SendPropertyChanging();
+			entity.Community_Visitor = null;
 		}
 	}
 }
