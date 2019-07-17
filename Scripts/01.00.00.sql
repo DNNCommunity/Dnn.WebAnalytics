@@ -1,84 +1,110 @@
-
-/*
-	Remove constraints
-*/
-
-IF EXISTS (SELECT 1 
-    FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS 
-    WHERE CONSTRAINT_NAME = N'FK_{objectQualifier}Visits_Visitors' 
-    AND TABLE_NAME = N'{objectQualifier}Visits')
-    ALTER TABLE {databaseOwner}[{objectQualifier}Visits] DROP CONSTRAINT [FK_{objectQualifier}Visits_Visitors];
-GO
-	
-IF EXISTS (SELECT 1 
-    FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS 
-    WHERE CONSTRAINT_NAME = N'FK_{objectQualifier}Visits_Tabs' 
-    AND TABLE_NAME = N'{objectQualifier}Visits')
-    ALTER TABLE {databaseOwner}[{objectQualifier}Visits] DROP CONSTRAINT [FK_{objectQualifier}Visits_Tabs];
+IF NOT OBJECT_ID('{databaseOwner}[{objectQualifier}Visits]') IS NULL
+    DROP TABLE {databaseOwner}[{objectQualifier}Visits];
 GO
 
-IF EXISTS (SELECT 1 
-    FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS 
-    WHERE CONSTRAINT_NAME = N'FK_{objectQualifier}Visitors_Users' 
-    AND TABLE_NAME = N'{objectQualifier}Visitors')
-    ALTER TABLE {databaseOwner}[{objectQualifier}Visitors] DROP CONSTRAINT [FK_{objectQualifier}Visitors_Users];
+CREATE TABLE {databaseOwner}[{objectQualifier}Visits](
+	[id] [bigint] IDENTITY(1,1) NOT NULL,
+	[date] [datetime] NOT NULL,
+	[visitor_id] [int] NOT NULL,
+	[tab_id] [int] NOT NULL,
+	[ip] [nvarchar](50) NOT NULL,
+	[country] [nvarchar](50) NOT NULL,
+	[region] [nvarchar](50) NOT NULL,
+	[city] [nvarchar](50) NOT NULL,
+	[latitude] [nvarchar](50) NOT NULL,
+	[longitude] [nvarchar](50) NOT NULL,
+	[language] [nvarchar](50) NOT NULL,
+	[domain] [nvarchar](255) NOT NULL,
+	[url] [nvarchar](2048) NOT NULL,
+	[user_agent] [nvarchar](512) NOT NULL,
+	[device_type] [nvarchar](50) NOT NULL,
+	[device] [nvarchar](255) NOT NULL,
+	[platform] [nvarchar](255) NOT NULL,
+	[browser] [nvarchar](255) NOT NULL,
+	[referrer_domain] [nvarchar](255) NOT NULL,
+	[referrer_url] [nvarchar](2048) NOT NULL,
+	[server] [nvarchar](50) NOT NULL,
+	[campaign] [nvarchar](50) NOT NULL,
+	[session_id] [uniqueidentifier] NULL,
+	[request_id] [uniqueidentifier] NULL,
+	[last_request_id] [uniqueidentifier] NULL,
+ CONSTRAINT [PK_{objectQualifier}Visits] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) 
+) 
 GO
 
-IF EXISTS (SELECT 1 
-    FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS 
-    WHERE CONSTRAINT_NAME = N'FK_{objectQualifier}Visitors_Portals' 
-    AND TABLE_NAME = N'{objectQualifier}Visitors')
-    ALTER TABLE {databaseOwner}[{objectQualifier}Visitors] DROP CONSTRAINT [FK_{objectQualifier}Visitors_Portals];
+IF NOT OBJECT_ID('{databaseOwner}[{objectQualifier}Visitors]') IS NULL
+    DROP TABLE {databaseOwner}[{objectQualifier}Visitors];
 GO
 
-/*
-	Rename community tables & PK's to prevent conflicts and group the data together
-*/
-
-sp_rename N'{objectQualifier}Visitors', N'{objectQualifier}Community_Visitors';
+CREATE TABLE {databaseOwner}[{objectQualifier}Visitors](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[portal_id] [int] NOT NULL,
+	[user_id] [int] NULL,
+	[created_on_date] [datetime] NOT NULL,
+ CONSTRAINT [PK_{objectQualifier}Visitors] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) 
+) 
 GO
 
-sp_rename @objname = N'[PK_{objectQualifier}Visitors]', @newname = N'PK_{objectQualifier}Community_Visitors';
+ALTER TABLE {databaseOwner}[{objectQualifier}Visitors]  WITH CHECK ADD  CONSTRAINT [FK_{objectQualifier}Visitors_Portals] FOREIGN KEY([portal_id])
+REFERENCES {databaseOwner}[{objectQualifier}Portals] ([PortalID])
+ON DELETE CASCADE
 GO
 
-sp_rename N'{objectQualifier}Visits', N'{objectQualifier}Community_Visits';
+ALTER TABLE {databaseOwner}[{objectQualifier}Visitors] CHECK CONSTRAINT [FK_{objectQualifier}Visitors_Portals]
 GO
 
-sp_rename @objname = N'[PK_{objectQualifier}Visits]', @newname = N'PK_{objectQualifier}Community_Visits';
+ALTER TABLE {databaseOwner}[{objectQualifier}Visitors]  WITH CHECK ADD  CONSTRAINT [FK_{objectQualifier}Visitors_Users] FOREIGN KEY([user_id])
+REFERENCES {databaseOwner}[{objectQualifier}Users] ([UserID])
+ON UPDATE CASCADE
+ON DELETE CASCADE
 GO
 
-/*
-	Add constraints back
-*/
-
-ALTER TABLE {databaseOwner}[{objectQualifier}Community_Visitors]  WITH CHECK ADD  CONSTRAINT [FK_{objectQualifier}Community_Visitors_Portals] FOREIGN KEY([portal_id])
-	REFERENCES {databaseOwner}[{objectQualifier}Portals] ([PortalID])
-	ON DELETE CASCADE;
+ALTER TABLE {databaseOwner}[{objectQualifier}Visitors] CHECK CONSTRAINT [FK_{objectQualifier}Visitors_Users]
 GO
 
-ALTER TABLE {databaseOwner}[{objectQualifier}Community_Visitors] CHECK CONSTRAINT [FK_{objectQualifier}Community_Visitors_Portals];
+ALTER TABLE {databaseOwner}[{objectQualifier}Visits]  WITH CHECK ADD  CONSTRAINT [FK_{objectQualifier}Visits_Tabs] FOREIGN KEY([tab_id])
+REFERENCES {databaseOwner}[{objectQualifier}Tabs] ([TabID])
 GO
 
-ALTER TABLE {databaseOwner}[{objectQualifier}Community_Visitors]  WITH CHECK ADD  CONSTRAINT [FK_{objectQualifier}Community_Visitors_Users] FOREIGN KEY([user_id])
-	REFERENCES {databaseOwner}[{objectQualifier}Users] ([UserID])
-	ON UPDATE CASCADE 
-	ON DELETE CASCADE;
+ALTER TABLE {databaseOwner}[{objectQualifier}Visits] CHECK CONSTRAINT [FK_{objectQualifier}Visits_Tabs]
 GO
 
-ALTER TABLE {databaseOwner}[{objectQualifier}Community_Visitors] CHECK CONSTRAINT [FK_{objectQualifier}Community_Visitors_Users];
+ALTER TABLE {databaseOwner}[{objectQualifier}Visits]  WITH CHECK ADD  CONSTRAINT [FK_{objectQualifier}Visits_Visitors] FOREIGN KEY([visitor_id])
+REFERENCES {databaseOwner}[{objectQualifier}Visitors] ([id])
+ON DELETE CASCADE
+
+GO
+ALTER TABLE {databaseOwner}[{objectQualifier}Visits] CHECK CONSTRAINT [FK_{objectQualifier}Visits_Visitors]
 GO
 
-ALTER TABLE {databaseOwner}[{objectQualifier}Community_Visits]  WITH CHECK ADD  CONSTRAINT [FK_{objectQualifier}Community_Visits_Tabs] FOREIGN KEY([tab_id])
-	REFERENCES {databaseOwner}[{objectQualifier}Tabs] ([TabID]);
-GO
-
-ALTER TABLE {databaseOwner}[{objectQualifier}Community_Visits] CHECK CONSTRAINT [FK_{objectQualifier}Community_Visits_Tabs];
-GO
-
-ALTER TABLE {databaseOwner}[{objectQualifier}Community_Visits]  WITH CHECK ADD  CONSTRAINT [FK_{objectQualifier}Community_Visits_Visitors] FOREIGN KEY([visitor_id])
-	REFERENCES {databaseOwner}[{objectQualifier}Community_Visitors] ([id])
-	ON DELETE CASCADE;
-GO
-
-ALTER TABLE {databaseOwner}[{objectQualifier}Community_Visits] CHECK CONSTRAINT [FK_{objectQualifier}Community_Visits_Visitors];
+IF EXISTS(SELECT 1 FROM {databaseOwner}[{objectQualifier}Schedule] WHERE [TypeFullName] = N'Dnn.WebAnalyticsLinqToSql.VisitorJob, Dnn.WebAnalyticsLinqToSql')
+BEGIN
+	UPDATE {databaseOwner}[{objectQualifier}Schedule] 
+	SET 
+		[TimeLapse] = 1, 
+		[TimeLapseMeasurement] = N'd', 
+		[RetryTimeLapse] = 1, 
+		[RetryTimeLapseMeasurement] = N'd', 
+		[RetainHistoryNum] = 10, 
+		[AttachToEvent] = N'', 
+		[CatchUpEnabled] = 0, 
+		[Enabled] = 1, 
+		[ObjectDependencies] = N'', 
+		[Servers] = null, 
+		[FriendlyName] = 'Visitor Tracking Job' 
+	WHERE 
+		[TypeFullName] = N'Dnn.WebAnalyticsLinqToSql.VisitorJob, Dnn.WebAnalyticsLinqToSql';
+END
+ELSE
+BEGIN
+	INSERT INTO {databaseOwner}[{objectQualifier}Schedule]
+		( [TypeFullName], [TimeLapse], [TimeLapseMeasurement], [RetryTimeLapse], [RetryTimeLapseMeasurement], [RetainHistoryNum], [AttachToEvent], [CatchUpEnabled], [Enabled], [ObjectDependencies], [Servers], [FriendlyName])
+	VALUES ( 'Dnn.WebAnalyticsLinqToSql.VisitorJob, Dnn.WebAnalyticsLinqToSql', 1, 'd', 1, 'd', 10, '', 0, 1, '', null, 'Visitor Tracking Job' );
+END
 GO
