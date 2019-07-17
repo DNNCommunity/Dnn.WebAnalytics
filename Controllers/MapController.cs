@@ -27,7 +27,7 @@ namespace Dnn.WebAnalytics
             {
                 List<MapDTO> dtos = new List<MapDTO>();
 
-                List<Visit> recent_visits = dc.Visits
+                List<Community_Visit> recent_visits = dc.Community_Visits
                     .Where(i =>
                         i.date >= DateTime.Now.AddMinutes(-minutes) &&
                         i.latitude != "" && i.longitude != ""
@@ -46,12 +46,12 @@ namespace Dnn.WebAnalytics
 
                 foreach (long id in ids)
                 {
-                    var visit = dc.Visits.Where(i => i.id == id).SingleOrDefault();
+                    var visit = dc.Community_Visits.Where(i => i.id == id).SingleOrDefault();
                     if (visit != null)
                     {
                         MapDTO mapDTO = new MapDTO()
                         {
-                            user_id = visit.Visitor.user_id,
+                            user_id = visit.Community_Visitor.user_id,
                             latitude = visit.latitude,
                             longitude = visit.longitude
                         };

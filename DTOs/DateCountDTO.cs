@@ -2,7 +2,6 @@ using System;
 
 namespace Dnn.WebAnalytics
 {
-    [Serializable]
     public class DateCountDTO
     {
         // initialization

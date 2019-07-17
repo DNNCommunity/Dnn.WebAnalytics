@@ -52,14 +52,14 @@ namespace Dnn.WebAnalytics
                 }
 
                 // update/create visitor 
-                var visitor = dc.Visitors.Where(i => i.id == visitor_id).SingleOrDefault();
+                var visitor = dc.Community_Visitors.Where(i => i.id == visitor_id).SingleOrDefault();
                 if (visitor == null)
                 { // create Visitor record 
-                    visitor = new Visitor()
+                    visitor = new Community_Visitor()
                     {
                         created_on_date = DateTime.Now
                     };
-                    dc.Visitors.InsertOnSubmit(visitor);
+                    dc.Community_Visitors.InsertOnSubmit(visitor);
                 }
 
                 // get User if authenticated
@@ -201,9 +201,9 @@ namespace Dnn.WebAnalytics
 
                         visitDTO = visitController.ProcessVisit(visitDTO);
 
-                        Visit visit = visitController.ConvertDtoToItem(null, visitDTO);
+                        Community_Visit visit = visitController.ConvertDtoToItem(null, visitDTO);
 
-                        dc.Visits.InsertOnSubmit(visit);
+                        dc.Community_Visits.InsertOnSubmit(visit);
                         dc.SubmitChanges();
                     }
                 }
