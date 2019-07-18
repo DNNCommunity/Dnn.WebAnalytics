@@ -8,6 +8,8 @@
     $scope.visitor_count = 0;
     $scope.user_count = 0;
 
+    $scope.chart;
+
     $scope.field = "date";
     $scope.rows = "10";
 
@@ -53,6 +55,7 @@
         $scope.period_start.setDate($scope.period_end.getDate() - 7);
 
         $scope.getDashboard();
+        $scope.getReport();
     };
     $scope.lastMonth = function () {
         $scope.period_end = new Date();
@@ -60,6 +63,7 @@
         $scope.period_start.setDate($scope.period_end.getDate() - 30);
 
         $scope.getDashboard();
+        $scope.getReport();
     };
     $scope.last3Months = function () {
         $scope.period_end = new Date();
@@ -67,6 +71,7 @@
         $scope.period_start.setDate($scope.period_end.getDate() - 90);
 
         $scope.getDashboard();
+        $scope.getReport();
     };
 
     $scope.getDashboard = function () {
@@ -78,7 +83,7 @@
             function (response) {
                 var dashboardDTO = response.data;
 
-                console.log(dashboardDTO);
+                //console.log(dashboardDTO);
 
                 $scope.view_count = dashboardDTO.view_count;
                 $scope.visit_count = dashboardDTO.visit_count;
@@ -169,6 +174,7 @@
                 }
                 $scope.chart_data = [views, visits, visitors, users];
 
+                $scope.chart.update();
                 $scope.dashboard_loading = false;
             },
             function (response) {
@@ -190,7 +196,7 @@
             function (response) {
                 $scope.report_rows = response.data;
 
-                console.log($scope.report_rows);
+                //console.log($scope.report_rows);
 
                 $scope.pie_chart_labels = [];
                 $scope.pie_chart_data = [];
@@ -224,6 +230,10 @@
         $scope.getReport();
     };
 
+    $scope.$on('chart-create', function (evt, chart) {        
+        $scope.chart = chart;
+    });
+
     init = function () {
         var promises = [];
         return $q.all(promises);
@@ -231,6 +241,5 @@
     init();
     $scope.lastWeek();
     $scope.getReport();
-
 }]);
 
