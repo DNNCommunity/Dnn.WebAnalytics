@@ -58,16 +58,10 @@
       <HintPath>..\..\bin\DotNetNuke.Web.Client.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DynamicQueryable, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\DynamicQueryable.2.0.25\lib\netstandard2.0\DynamicQueryable.dll</HintPath>
-    </Reference>
     <Reference Include="FiftyOne.Foundation">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>_LegacyReferences\FiftyOne.Foundation.dll</HintPath>
       <Private>True</Private>
-    </Reference>
-    <Reference Include="Jokenizer.Net, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\Jokenizer.Net.1.1.0\lib\netstandard2.0\Jokenizer.Net.dll</HintPath>
     </Reference>
     <Reference Include="MaxMind.Db, Version=2.0.0.0, Culture=neutral, PublicKeyToken=66afa4cc5ae853ac, processorArchitecture=MSIL">
       <HintPath>packages\MaxMind.Db.2.4.0\lib\net45\MaxMind.Db.dll</HintPath>
@@ -98,11 +92,6 @@
     </Reference>
     <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="Telerik.Web.UI, Version=2013.2.717.40, Culture=neutral, PublicKeyToken=121fae78165ba3d4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\Telerik.Web.UI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\VisitorTracker.cs" />
@@ -157,7 +146,6 @@
     <Content Include="MapSettings.ascx" />
     <Content Include="plugins\angular-chart\angular-chart.js" />
     <Content Include="plugins\angular-chart\angular-chart.min.js" />
-    <Content Include="plugins\lodash\lodash.js" />
     <Content Include="Scripts\01.01.01.sql" />
     <Content Include="Scripts\01.01.00.sql" />
     <Content Include="View.ascx" />
