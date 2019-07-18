@@ -78,6 +78,8 @@
             function (response) {
                 var dashboardDTO = response.data;
 
+                console.log(dashboardDTO);
+
                 $scope.view_count = dashboardDTO.view_count;
                 $scope.visit_count = dashboardDTO.visit_count;
                 $scope.visitor_count = dashboardDTO.visitor_count;
@@ -187,6 +189,8 @@
         visitService.getReport($scope.field, portal_id, $scope.period_start, $scope.period_end, $scope.rows).then(
             function (response) {
                 $scope.report_rows = response.data;
+
+                console.log($scope.report_rows);
 
                 $scope.pie_chart_labels = [];
                 $scope.pie_chart_data = [];

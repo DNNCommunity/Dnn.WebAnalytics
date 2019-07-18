@@ -12,26 +12,6 @@
   <license />
   <releaseNotes />
   <components>
-    <component type="Script">
-      <scripts>
-        <basePath>DesktopModules\Dnn.WebAnalytics</basePath>
-        <script type="Install">
-          <path>Scripts</path>
-          <name>01.01.01.sql</name>
-          <version>01.01.01</version>
-        </script>
-        <script type="Install">
-          <path>Scripts</path>
-          <name>01.01.00.sql</name>
-          <version>01.01.00</version>
-        </script>
-        <script type="Install">
-          <path>Scripts</path>
-          <name>01.00.00.sql</name>
-          <version>01.00.00</version>
-        </script>
-      </scripts>
-    </component>
     <component type="Module">
       <desktopModule>
         <moduleName>Dnn.WebAnalytics</moduleName>
@@ -124,10 +104,6 @@
         <file>
           <path>plugins\angular-chart</path>
           <name>angular-chart.min.js</name>
-        </file>
-        <file>
-          <path>plugins\lodash</path>
-          <name>lodash.js</name>
         </file>
         <file>
           <name>View.ascx</name>
