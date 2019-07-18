@@ -1,5 +1,5 @@
 ﻿<dotnetnuke type="Package" version="5.0">
-  <packages><package name="Dnn.WebAnalytics" type="Module" version="1.0.8">
+  <packages><package name="Dnn.WebAnalytics" type="Module" version="1.1.2">
   <friendlyName>Dnn.WebAnalytics</friendlyName>
   <description />
   <iconFile>/Images/icon_extensions_32px.png</iconFile>
@@ -12,6 +12,26 @@
   <license />
   <releaseNotes />
   <components>
+    <component type="Script">
+      <scripts>
+        <basePath>DesktopModules\Dnn.WebAnalytics</basePath>
+        <script type="Install">
+          <path>Scripts</path>
+          <name>01.01.01.sql</name>
+          <version>01.01.01</version>
+        </script>
+        <script type="Install">
+          <path>Scripts</path>
+          <name>01.01.00.sql</name>
+          <version>01.01.00</version>
+        </script>
+        <script type="Install">
+          <path>Scripts</path>
+          <name>01.00.00.sql</name>
+          <version>01.00.00</version>
+        </script>
+      </scripts>
+    </component>
     <component type="Module">
       <desktopModule>
         <moduleName>Dnn.WebAnalytics</moduleName>
@@ -95,16 +115,15 @@
           <name>Map.ascx</name>
         </file>
         <file>
+          <name>MapSettings.ascx</name>
+        </file>
+        <file>
           <path>plugins\angular-chart</path>
           <name>angular-chart.js</name>
         </file>
         <file>
           <path>plugins\angular-chart</path>
           <name>angular-chart.min.js</name>
-        </file>
-        <file>
-          <path>plugins\angular-google-maps</path>
-          <name>angular-google-maps.min.js</name>
         </file>
         <file>
           <path>plugins\lodash</path>

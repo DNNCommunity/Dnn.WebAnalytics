@@ -19,8 +19,6 @@ namespace Dnn.WebAnalytics
             ClientResourceManager.RegisterStyleSheet(this.Page, ResolveUrl("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css"), 2);
             ClientResourceManager.RegisterScript(this.Page, ResolveUrl("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"), 5);
             ClientResourceManager.RegisterScript(this.Page, ResolveUrl("/DesktopModules/Dnn.WebAnalytics/plugins/angular-chart/angular-chart.min.js"), 6);
-
-            ClientResourceManager.RegisterScript(this.Page, ResolveUrl("http://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.0.1/lodash.js"), 1);
                     
             ClientResourceManager.RegisterScript(this.Page, ResolveUrl("https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.min.js"), 2);
             ClientResourceManager.RegisterScript(this.Page, ResolveUrl("https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular-messages.min.js"), 3);
