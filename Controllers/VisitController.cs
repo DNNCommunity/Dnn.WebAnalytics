@@ -17,7 +17,6 @@ namespace Dnn.WebAnalytics
     [ValidateAntiForgeryToken]
     public class VisitController : DnnApiController
     {
-        VisitorController visitorController = new VisitorController();
         DataContext dc = new DataContext();
         public static string UserAgentFilter = "bot|crawl|spider|sbider|ask|slurp|larbin|search|indexer|archiver|nutch|capture|scanalert";
 
