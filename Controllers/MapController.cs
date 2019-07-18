@@ -35,7 +35,7 @@ namespace Dnn.WebAnalytics
                     .ToList();
 
                 var recent_unique_visits = recent_visits
-                        .GroupBy(i => i.ip)
+                        .GroupBy(i => i.session_id)
                         .Select(i => new
                         {
                             id = i.Max(o => o.id)

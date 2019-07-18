@@ -98,13 +98,23 @@
       <Association Name="User_Community_Visitor" Member="Community_Visitors" ThisKey="UserID" OtherKey="user_id" Type="Community_Visitor" />
     </Type>
   </Table>
+  <Table Name="dbo.Community_Visitors" Member="Community_Visitors">
+    <Type Name="Community_Visitor">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="portal_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="user_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="created_on_date" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Association Name="Community_Visitor_Community_Visit" Member="Community_Visits" ThisKey="id" OtherKey="visitor_id" Type="Community_Visit" />
+      <Association Name="Portal_Community_Visitor" Member="Portal" ThisKey="portal_id" OtherKey="PortalID" Type="Portal" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+      <Association Name="User_Community_Visitor" Member="User" ThisKey="user_id" OtherKey="UserID" Type="User" IsForeignKey="true" DeleteRule="CASCADE" />
+    </Type>
+  </Table>
   <Table Name="dbo.Community_Visits" Member="Community_Visits">
     <Type Name="Community_Visit">
       <Column Name="id" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="date" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="visitor_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="tab_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="ip" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
       <Column Name="country" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
       <Column Name="region" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
       <Column Name="city" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
@@ -127,17 +137,6 @@
       <Column Name="last_request_id" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
       <Association Name="Tab_Community_Visit" Member="Tab" ThisKey="tab_id" OtherKey="TabID" Type="Tab" IsForeignKey="true" />
       <Association Name="Community_Visitor_Community_Visit" Member="Community_Visitor" ThisKey="visitor_id" OtherKey="id" Type="Community_Visitor" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Community_Visitors" Member="Community_Visitors">
-    <Type Name="Community_Visitor">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="portal_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="user_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="created_on_date" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Association Name="Community_Visitor_Community_Visit" Member="Community_Visits" ThisKey="id" OtherKey="visitor_id" Type="Community_Visit" />
-      <Association Name="Portal_Community_Visitor" Member="Portal" ThisKey="portal_id" OtherKey="PortalID" Type="Portal" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
-      <Association Name="User_Community_Visitor" Member="User" ThisKey="user_id" OtherKey="UserID" Type="User" IsForeignKey="true" DeleteRule="CASCADE" />
     </Type>
   </Table>
 </Database>

@@ -3,6 +3,11 @@
     $scope.period_start;
     $scope.period_end;
 
+    $scope.view_count = 0;
+    $scope.visit_count = 0;
+    $scope.visitor_count = 0;
+    $scope.user_count = 0;
+
     $scope.field = "date";
     $scope.rows = "10";
 
@@ -67,6 +72,8 @@
     $scope.getDashboard = function () {
         var deferred = $q.defer();
 
+        $scope.dashboard_loading = true;
+
         visitService.getDashboard(portal_id, $scope.period_start, $scope.period_end).then(
             function (response) {
                 var dashboardDTO = response.data;
@@ -75,6 +82,13 @@
                 $scope.visit_count = dashboardDTO.visit_count;
                 $scope.visitor_count = dashboardDTO.visitor_count;
                 $scope.user_count = dashboardDTO.user_count;
+
+                $scope.chart_series = [
+                    'Views (' + $scope.view_count + ')',
+                    'Visits (' + $scope.visit_count + ')',
+                    'Visitors (' + $scope.visitor_count + ')',
+                    'Users (' + $scope.user_count + ')'
+                ];
 
                 var current_date = new Date($scope.period_start.getFullYear(), $scope.period_start.getMonth(), $scope.period_start.getDate());
                 var end_date = new Date($scope.period_end.getFullYear(), $scope.period_end.getMonth(), $scope.period_end.getDate());
@@ -152,8 +166,11 @@
                     current_date.setDate(current_date.getDate() + 1);
                 }
                 $scope.chart_data = [views, visits, visitors, users];
+
+                $scope.dashboard_loading = false;
             },
             function (response) {
+                $scope.dashboard_loading = false;
                 console.log('getDashboard failed', response);
                 toastr.error("There was a problem loading the dashboard", "Error");
                 deferred.reject();
@@ -164,6 +181,8 @@
 
     $scope.getReport = function () {
         var deferred = $q.defer();
+
+        $scope.report_loading = true;
 
         visitService.getReport($scope.field, portal_id, $scope.period_start, $scope.period_end, $scope.rows).then(
             function (response) {
@@ -184,8 +203,11 @@
 
                     $scope.pie_chart_data.push(report_row.count);
                 }
+
+                $scope.report_loading = false;
             },
             function (response) {
+                $scope.report_loading = false;
                 console.log('getReport failed', response);
                 toastr.error("There was a problem loading the report", "Error");
                 deferred.reject();
@@ -197,7 +219,7 @@
     $scope.reportChanged = function () {
         $scope.getReport();
     };
-    
+
     init = function () {
         var promises = [];
         return $q.all(promises);
