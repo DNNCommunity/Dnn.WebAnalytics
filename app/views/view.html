@@ -1,10 +1,4 @@
-﻿
-<div ng-show="loading" style="font-size: 60px; text-align: center;">
-    <i class="fas fa-cog fa-spin fa-3x fa-fw"></i>
-</div>
-
-
-<div ng-form="formWebAnalytics" id="formWebAnalytics" class="form" ng-show="!loading">
+﻿<div ng-form="formWebAnalytics" id="formWebAnalytics" class="form">
 
     <div class="form-row">
         <div class="col">
@@ -46,16 +40,15 @@
 
     <hr />
 
-    <!--<div class="row">
-        <div class="col text-center">Views: <span class="badge badge-primary">{{view_count}}</span></div>
-        <div class="col text-center">Visits: <span class="badge badge-primary">{{visit_count}}</span></div>
-        <div class="col text-center">Visitors: <span class="badge badge-primary">{{visitor_count}}</span></div>
-        <div class="col text-center">Users: <span class="badge badge-primary">{{user_count}}</span></div>
-    </div>-->
+    <div ng-show="dashboard_loading" style="font-size: 60px; text-align: center;">
+        <i class="fas fa-cog fa-spin fa-3x fa-fw"></i>
+    </div>
 
-    <canvas id="line" class="chart chart-line" chart-data="chart_data" chart-labels="chart_labels" chart-series="chart_series" chart-options="chart_options"></canvas>
+    <div ng-show="!dashboard_loading">
+        <canvas id="line" class="chart chart-line" chart-data="chart_data" chart-labels="chart_labels" chart-series="chart_series" chart-options="chart_options"></canvas>
+        <hr />
+    </div>
 
-    <hr />
     <h3>Visit Breakdown</h3>
     <div class="row">
         <div class="col">
@@ -98,38 +91,46 @@
         </div>
     </div>
 
-    <canvas id="pie" class="pie chart-pie" chart-data="pie_chart_data" chart-labels="pie_chart_labels" chart-options="pie_chart_options"></canvas>
+    <div ng-show="report_loading" style="font-size: 60px; text-align: center;">
+        <i class="fas fa-cog fa-spin fa-3x fa-fw"></i>
+    </div>
 
-    <table class="table table-striped">
-        <colgroup>
-            <col />
-            <col />
-            <col />
-            <col />
-        </colgroup>
-        <thead>
-            <tr>
-                <th>Field</th>
-                <th>Count</th>
-                <th>Total</th>
-                <th>Percent</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr ng-repeat="report_row in report_rows">
-                <td>
-                    {{report_row.field}}
-                </td>
-                <td>
-                    {{report_row.count}}
-                </td>
-                <td>
-                    {{report_row.total}}
-                </td>
-                <td>
-                    {{report_row.percent}}
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <div ng-show="!report_loading">
+
+        <canvas id="pie" class="pie chart-pie" chart-data="pie_chart_data" chart-labels="pie_chart_labels" chart-options="pie_chart_options"></canvas>
+
+        <table class="table table-striped">
+            <colgroup>
+                <col />
+                <col />
+                <col />
+                <col />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>Field</th>
+                    <th>Count</th>
+                    <th>Total</th>
+                    <th>Percent</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="report_row in report_rows">
+                    <td>
+                        {{report_row.field}}
+                    </td>
+                    <td>
+                        {{report_row.count}}
+                    </td>
+                    <td>
+                        {{report_row.total}}
+                    </td>
+                    <td>
+                        {{report_row.percent}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
 </div>

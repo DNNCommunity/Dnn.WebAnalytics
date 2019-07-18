@@ -29,8 +29,7 @@ namespace Dnn.WebAnalytics
             dto.id = item.id;
             dto.date = item.date;
             dto.visitor_id = item.visitor_id;
-            dto.tab_id = item.tab_id;
-            dto.ip = item.ip;
+            dto.tab_id = item.tab_id;            
             dto.country = item.country;
             dto.region = item.region;
             dto.city = item.city;
@@ -70,8 +69,7 @@ namespace Dnn.WebAnalytics
             item.id = dto.id;
             item.date = dto.date;
             item.visitor_id = dto.visitor_id;
-            item.tab_id = dto.tab_id;
-            item.ip = dto.ip;
+            item.tab_id = dto.tab_id;            
             item.country = dto.country;
             item.region = dto.region;
             item.city = dto.city;
@@ -252,11 +250,7 @@ namespace Dnn.WebAnalytics
                     case "url":
                         grouped = list.GroupBy(i => i.url);
                         break;
-
-                    case "ip":
-                        grouped = list.GroupBy(i => i.ip);
-                        break;
-
+                                           
                     case "country":
                         grouped = list.GroupBy(i => i.country);
                         break;
