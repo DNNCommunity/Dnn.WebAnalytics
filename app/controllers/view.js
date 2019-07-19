@@ -174,7 +174,6 @@
                 }
                 $scope.chart_data = [views, visits, visitors, users];
 
-                $scope.chart.update();
                 $scope.dashboard_loading = false;
             },
             function (response) {
@@ -232,17 +231,12 @@
             $scope.chart.update();
         }
     });
-
-    $scope.$on('chart-create', function (evt, chart) {        
-        $scope.chart = chart;
-    });
-
+    
     init = function () {
         var promises = [];
         return $q.all(promises);
     };
     init();
     $scope.lastWeek();
-    $scope.getReport();
 }]);
 

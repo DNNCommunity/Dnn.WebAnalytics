@@ -54,7 +54,7 @@
         <div class="col">
             <div class="form-group">
                 <label for="report_type" class="control-label">By Field</label>
-                <select class="form-control" ng-model="field" ng-change="reportChanged()">
+                <select class="form-control" ng-model="field" ng-change="getReport()">
                     <option value="date">Dates</option>
                     <option value="weekday">Week Days</option>
                     <option value="month">Month</option>
@@ -81,7 +81,7 @@
         <div class="col">
             <div class="form-group">
                 <label for="row" class="control-label">Number of Results</label>
-                <select class="form-control" ng-model="rows" ng-change="reportChanged()">
+                <select class="form-control" ng-model="rows" ng-change="getReport()">
                     <option value="10">Top 10</option>
                     <option value="25">Top 25</option>
                     <option value="50">Top 50</option>
