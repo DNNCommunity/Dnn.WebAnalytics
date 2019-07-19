@@ -220,9 +220,12 @@
         return deferred.promise;
     };
 
-    $scope.reportChanged = function () {
-        $scope.getReport();
-    };
+    $scope.$on('chart-create', function (evt, chart) {
+        if (chart.id === 'line') {
+            $scope.chart = chart;
+            $scope.chart.update();
+        }
+    });
 
     init = function () {
         var promises = [];
