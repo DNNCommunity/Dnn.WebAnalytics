@@ -195,7 +195,7 @@
             function (response) {
                 $scope.report_rows = response.data;
 
-                //console.log($scope.report_rows);
+                //console.log('get report', $scope.report_rows);
 
                 $scope.pie_chart_labels = [];
                 $scope.pie_chart_data = [];
@@ -226,9 +226,12 @@
     };
 
     $scope.$on('chart-create', function (evt, chart) {
-        if (chart.id === 'line') {
+        //console.log('chart-create', chart);
+        if (chart.canvas.id === 'line') {
+            //console.log('before create', $scope.report_rows);
             $scope.chart = chart;
             $scope.chart.update();
+            //console.log('after create', $scope.report_rows);
         }
     });
     
