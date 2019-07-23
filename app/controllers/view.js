@@ -8,6 +8,7 @@
     $scope.visitor_count = 0;
     $scope.user_count = 0;
 
+    $scope.chart_labels = [];
     $scope.chart;
 
     $scope.field = "date";
@@ -83,12 +84,25 @@
             function (response) {
                 var dashboardDTO = response.data;
 
-                //console.log(dashboardDTO);
+                console.log(dashboardDTO);
 
                 $scope.view_count = dashboardDTO.view_count;
                 $scope.visit_count = dashboardDTO.visit_count;
                 $scope.visitor_count = dashboardDTO.visitor_count;
                 $scope.user_count = dashboardDTO.user_count;
+
+                $scope.views = dashboardDTO.views;
+                $scope.visits = dashboardDTO.visits;
+                $scope.visitors = dashboardDTO.visitors;
+                $scope.users = dashboardDTO.users;
+
+                var current_date = new Date($scope.period_start.getFullYear(), $scope.period_start.getMonth(), $scope.period_start.getDate());
+                var end_date = new Date($scope.period_end.getFullYear(), $scope.period_end.getMonth(), $scope.period_end.getDate());
+                var labels = [];
+                while (current_date <= end_date) {
+                    labels.push($filter('date')(current_date, 'shortDate'));
+                    current_date.setDate(current_date.getDate() + 1);
+                }
 
                 $scope.chart_series = [
                     'Views (' + $scope.view_count + ')',
@@ -97,83 +111,9 @@
                     'Users (' + $scope.user_count + ')'
                 ];
 
-                var current_date = new Date($scope.period_start.getFullYear(), $scope.period_start.getMonth(), $scope.period_start.getDate());
-                var end_date = new Date($scope.period_end.getFullYear(), $scope.period_end.getMonth(), $scope.period_end.getDate());
-
-                $scope.chart_labels = [];
-
-                var views = [];
-                var visits = [];
-                var visitors = [];
-                var users = [];
-
-                while (current_date <= end_date) {
-                    $scope.chart_labels.push($filter('date')(current_date, 'shortDate'));
-
-                    var view_data = null;
-                    for (var view_index = 0; view_index < dashboardDTO.views.length; view_index++) {
-                        var view = dashboardDTO.views[view_index];
-                        var view_date = new Date(view.date);
-                        if (+view_date === +current_date) {
-                            view_data = view;
-                        }
-                    }
-                    if (view_data) {
-                        views.push(view_data.count);
-                    }
-                    else {
-                        views.push(0);
-                    }
-
-                    var visit_data = null;
-                    for (var visit_index = 0; visit_index < dashboardDTO.visits.length; visit_index++) {
-                        var visit = dashboardDTO.visits[visit_index];
-                        var visit_date = new Date(visit.date);
-                        if (+visit_date === +current_date) {
-                            visit_data = visit;
-                        }
-                    }
-                    if (visit_data) {
-                        visits.push(visit_data.count);
-                    }
-                    else {
-                        visits.push(0);
-                    }
-
-                    var visitor_data = null;
-                    for (var visitor_index = 0; visitor_index < dashboardDTO.visitors.length; visitor_index++) {
-                        var visitor = dashboardDTO.visitors[visitor_index];
-                        var visitor_date = new Date(visitor.date);
-                        if (+visitor_date === +current_date) {
-                            visitor_data = visitor;
-                        }
-                    }
-                    if (visitor_data) {
-                        visitors.push(visitor_data.count);
-                    }
-                    else {
-                        visitors.push(0);
-                    }
-
-                    var user_data = null;
-                    for (var user_index = 0; user_index < dashboardDTO.users.length; user_index++) {
-                        var user = dashboardDTO.users[user_index];
-                        var user_date = new Date(user.date);
-                        if (+user_date === +current_date) {
-                            user_data = user;
-                        }
-                    }
-                    if (user_data) {
-                        users.push(user_data.count);
-                    }
-                    else {
-                        users.push(0);
-                    }
-
-                    current_date.setDate(current_date.getDate() + 1);
-                }
-                $scope.chart_data = [views, visits, visitors, users];
-
+                $scope.chart_labels = labels;
+                $scope.chart_data = [$scope.views, $scope.visits, $scope.visitors, $scope.users];
+                
                 $scope.dashboard_loading = false;
             },
             function (response) {
@@ -234,7 +174,7 @@
             //console.log('after create', $scope.report_rows);
         }
     });
-    
+
     init = function () {
         var promises = [];
         return $q.all(promises);

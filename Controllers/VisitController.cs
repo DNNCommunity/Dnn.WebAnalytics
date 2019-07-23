@@ -28,7 +28,7 @@ namespace Dnn.WebAnalytics
             dto.id = item.id;
             dto.date = item.date;
             dto.visitor_id = item.visitor_id;
-            dto.tab_id = item.tab_id;            
+            dto.tab_id = item.tab_id;
             dto.country = item.country;
             dto.region = item.region;
             dto.city = item.city;
@@ -68,7 +68,7 @@ namespace Dnn.WebAnalytics
             item.id = dto.id;
             item.date = dto.date;
             item.visitor_id = dto.visitor_id;
-            item.tab_id = dto.tab_id;            
+            item.tab_id = dto.tab_id;
             item.country = dto.country;
             item.region = dto.region;
             item.city = dto.city;
@@ -142,6 +142,8 @@ namespace Dnn.WebAnalytics
             }
         }
 
+
+        // used for the top graph
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public HttpResponseMessage Get(int portal_id, Nullable<DateTime> period_start, Nullable<DateTime> period_end)
@@ -184,6 +186,7 @@ namespace Dnn.WebAnalytics
             }
         }
 
+        // used for the bottom detail graph
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public HttpResponseMessage Get(string field, int portal_id, Nullable<DateTime> period_start, Nullable<DateTime> period_end, int rows)
@@ -249,7 +252,7 @@ namespace Dnn.WebAnalytics
                     case "url":
                         grouped = list.GroupBy(i => i.url);
                         break;
-                                           
+
                     case "country":
                         grouped = list.GroupBy(i => i.country);
                         break;
@@ -403,50 +406,6 @@ namespace Dnn.WebAnalytics
             return ConvertItemToDto(visit);
         }
 
-        //[NonAction]
-        //public void WriteVisits()
-        //{
-        //    List<VisitDTO> visit_dtos = new List<VisitDTO>();
-
-        //    // dictionary to store visitors to update
-        //    Dictionary<int, Nullable<int>> dicVisitors = new Dictionary<int, Nullable<int>>();
-
-        //    // get all visitor objects from Cache
-        //    dynamic CacheItems = HttpRuntime.Cache.Cast<DictionaryEntry>().Select(entry => (string)entry.Key).Where(key => key.StartsWith("DNNVISITOR")).ToArray();
-
-        //    // iterate through visit items
-        //    foreach (string Key in CacheItems)
-        //    {
-        //        // get visitor object
-        //        VisitDTO visit_dto = (VisitDTO)HttpRuntime.Cache.Get(Key);
-
-        //        // populate visit fields
-        //        visit_dto = ProcessVisit(visit_dto);
-
-        //        Visit visit = ConvertDtoToItem(null, visit_dto);
-        //        dc.Visits.InsertOnSubmit(visit);
-        //        dc.SubmitChanges();
-
-        //        //// save visitor 
-        //        //if (!dicVisitors.ContainsKey(visit_dto.visitor_id))
-        //        //{
-        //        //    dicVisitors.Add(visit_dto.visitor_id, visit_dto..user_id);
-        //        //}
-        //        //else
-        //        //{
-        //        //    dicVisitors[visit_dto.visitor_id] = visit_dto.user_id;
-        //        //}
-
-        //        HttpRuntime.Cache.Remove(Key);                
-        //    }
-
-        //    //// iterate through all visitors that need to be updated
-        //    //foreach (KeyValuePair<int, Nullable<int>> kvp in dicVisitors)
-        //    //{
-        //    //    visitorController.UpdateVisitor(kvp.Key, kvp.Value);
-        //    //}
-        //}
-
         [NonAction]
         public VisitDTO ProcessVisit(VisitDTO visit)
         {
@@ -559,8 +518,10 @@ namespace Dnn.WebAnalytics
         }
 
         [NonAction]
-        public List<DateCountDTO> GetViews(int portal_id, Nullable<DateTime> start_date, Nullable<DateTime> end_date)
+        public List<int> GetViews(int portal_id, Nullable<DateTime> start_date, Nullable<DateTime> end_date)
         {
+            var views = new List<int>();
+
             var query = dc.Community_Visits.Where(i => i.Tab.PortalID == portal_id);
 
             if (start_date.HasValue)
@@ -573,9 +534,7 @@ namespace Dnn.WebAnalytics
                 query = query.Where(i => i.date.Date <= end_date.GetValueOrDefault().Date);
             }
 
-            var list = query.ToList();
-
-            var results = list
+            var results = query
                             .GroupBy(i => i.date.Date)
                             .Select(i => new DateCountDTO()
                             {
@@ -585,12 +544,30 @@ namespace Dnn.WebAnalytics
                             .OrderBy(i => i.date)
                             .ToList();
 
-            return results;
+            var date = start_date.GetValueOrDefault().Date;
+            var end = end_date.GetValueOrDefault().Date;
+            while (date <= end)
+            {
+                var result = results.Where(i => i.date.Date == date.Date).SingleOrDefault();
+                if (result != null)
+                {
+                    views.Add(result.count);
+                }
+                else
+                {
+                    views.Add(0);
+                }
+                date = date.AddDays(1);
+            }
+
+            return views;
         }
 
         [NonAction]
-        public List<DateCountDTO> GetVisits(int portal_id, Nullable<DateTime> start_date, Nullable<DateTime> end_date)
+        public List<int> GetVisits(int portal_id, Nullable<DateTime> start_date, Nullable<DateTime> end_date)
         {
+            var visits = new List<int>();
+
             var query = dc.Community_Visits.Where(i => i.Tab.PortalID == portal_id);
 
             if (start_date.HasValue)
@@ -603,9 +580,7 @@ namespace Dnn.WebAnalytics
                 query = query.Where(i => i.date.Date <= end_date.GetValueOrDefault().Date);
             }
 
-            var list = query.ToList();
-
-            var results = list
+            var results = query
                          .GroupBy(i => i.date.Date)
                          .Select(i => new DateCountDTO()
                          {
@@ -615,12 +590,30 @@ namespace Dnn.WebAnalytics
                          .OrderBy(i => i.date)
                          .ToList();
 
-            return results;
+            var date = start_date.GetValueOrDefault().Date;
+            var end = end_date.GetValueOrDefault().Date;
+            while (date <= end)
+            {
+                var result = results.Where(i => i.date.Date == date.Date).SingleOrDefault();
+                if (result != null)
+                {
+                    visits.Add(result.count);
+                }
+                else
+                {
+                    visits.Add(0);
+                }
+                date = date.AddDays(1);
+            }
+
+            return visits;
         }
 
         [NonAction]
-        public List<DateCountDTO> GetVisitors(int portal_id, Nullable<DateTime> start_date, Nullable<DateTime> end_date)
+        public List<int> GetVisitors(int portal_id, Nullable<DateTime> start_date, Nullable<DateTime> end_date)
         {
+            var visitors = new List<int>();
+
             var query = dc.Community_Visits.Where(i => i.Tab.PortalID == portal_id);
 
             if (start_date.HasValue)
@@ -633,9 +626,7 @@ namespace Dnn.WebAnalytics
                 query = query.Where(i => i.date.Date <= end_date.GetValueOrDefault().Date);
             }
 
-            var list = query.ToList();
-
-            var results = list
+            var results = query
                          .GroupBy(i => i.date.Date)
                          .Select(i => new DateCountDTO()
                          {
@@ -645,12 +636,30 @@ namespace Dnn.WebAnalytics
                          .OrderBy(i => i.date)
                          .ToList();
 
-            return results;
+            var date = start_date.GetValueOrDefault().Date;
+            var end = end_date.GetValueOrDefault().Date;
+            while (date <= end)
+            {
+                var result = results.Where(i => i.date.Date == date.Date).SingleOrDefault();
+                if (result != null)
+                {
+                    visitors.Add(result.count);
+                }
+                else
+                {
+                    visitors.Add(0);
+                }
+                date = date.AddDays(1);
+            }
+
+            return visitors;
         }
 
         [NonAction]
-        public List<DateCountDTO> GetUsers(int portal_id, Nullable<DateTime> start_date, Nullable<DateTime> end_date)
+        public List<int> GetUsers(int portal_id, Nullable<DateTime> start_date, Nullable<DateTime> end_date)
         {
+            var users = new List<int>();
+
             var query = dc.Community_Visits.Where(i => i.Tab.PortalID == portal_id);
 
             if (start_date.HasValue)
@@ -663,9 +672,7 @@ namespace Dnn.WebAnalytics
                 query = query.Where(i => i.date.Date <= end_date.GetValueOrDefault().Date);
             }
 
-            var list = query.ToList();
-
-            var results = list
+            var results = query
                .GroupBy(i => i.date.Date)
                .Select(i => new DateCountDTO()
                {
@@ -675,8 +682,23 @@ namespace Dnn.WebAnalytics
                .OrderBy(i => i.date)
                .ToList();
 
-            return results;
-        }
+            var date = start_date.GetValueOrDefault().Date;
+            var end = end_date.GetValueOrDefault().Date;
+            while (date <= end)
+            {
+                var result = results.Where(i => i.date.Date == date.Date).SingleOrDefault();
+                if (result != null)
+                {
+                    users.Add(result.count);
+                }
+                else
+                {
+                    users.Add(0);
+                }
+                date = date.AddDays(1);
+            }
 
+            return users;
+        }
     }
 }
