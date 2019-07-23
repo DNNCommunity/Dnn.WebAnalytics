@@ -16,10 +16,10 @@ namespace Dnn.WebAnalytics
         public int visitor_count { get; set; }
         public int user_count { get; set; }
 
-        public List<DateCountDTO> views { get; set; }
-        public List<DateCountDTO> visits { get; set; }
-        public List<DateCountDTO> visitors { get; set; }
-        public List<DateCountDTO> users { get; set; }
+        public List<int> views { get; set; }
+        public List<int> visits { get; set; }
+        public List<int> visitors { get; set; }
+        public List<int> users { get; set; }
 
     }
 
