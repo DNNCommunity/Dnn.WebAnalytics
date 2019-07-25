@@ -417,9 +417,9 @@ namespace Dnn.WebAnalytics
             // get geo info based on IP 
             if (!string.IsNullOrEmpty(visit.ip) && visit.ip != "127.0.0.1")
             {
-                using (var objGeoIP2DB = new DatabaseReader(string.Concat(AppDomain.CurrentDomain.BaseDirectory, "App_Data\\GeoIP2-City.mmdb")))
+                try
                 {
-                    try
+                    using (var objGeoIP2DB = new DatabaseReader(string.Concat(AppDomain.CurrentDomain.BaseDirectory, "App_Data\\GeoIP2-City.mmdb")))
                     {
                         var objGeoIP2 = objGeoIP2DB.City(visit.ip);
 
@@ -438,17 +438,17 @@ namespace Dnn.WebAnalytics
                         visit.latitude = objGeoIP2.Location.Latitude.ToString();
                         visit.longitude = objGeoIP2.Location.Longitude.ToString();
                     }
-                    catch
-                    {
-                        // IP address cannot be resolved
-                    }
+                }
+                catch
+                {
+                    // IP address cannot be resolved
                 }
             }
 
             //get user agent properties using the 51Degrees database
             if (!string.IsNullOrEmpty(visit.user_agent))
             {
-                var device = WebProvider.ActiveProvider.Match(visit.user_agent);
+                var device = WebProvider.ActiveProvider?.Match(visit.user_agent);
                 if (device != null)
                 {
                     if (device["IsMobile"] != null && device["IsMobile"].ToString() == "True")
