@@ -1,5 +1,6 @@
 ﻿<dotnetnuke type="Package" version="5.0">
-  <packages><package name="Dnn.WebAnalytics" type="Module" version="1.1.2">
+  <packages>
+    <package name="Dnn.WebAnalytics" type="Module" version="01.01.02">
   <friendlyName>Dnn.WebAnalytics</friendlyName>
   <description />
   <iconFile>/Images/icon_extensions_32px.png</iconFile>
@@ -40,108 +41,121 @@
         </moduleDefinitions>
       </desktopModule>
     </component>
+    <component type="ResourceFile">
+      <resourceFiles>
+        <basePath>DesktopModules\Dnn.WebAnalytics</basePath>
+        <resourceFile>
+          <name>resources.zip</name>
+        </resourceFile>
+      </resourceFiles>
+    </component>
     <component type="Assembly">
       <assemblies>
         <basePath>bin</basePath>
         <assembly>
           <name>Dnn.WebAnalytics.dll</name>
         </assembly>
+        <assembly>
+          <name>FiftyOne.Foundation.dll</name>
+        </assembly>
+        <assembly>
+          <name>MaxMind.Db.dll</name>
+        </assembly>
+        <assembly>
+          <name>MaxMind.GeoIP2.dll</name>
+        </assembly>
       </assemblies>
     </component>
-    <component type="File">
-      <files>
+    <component type="Config">
+      <config>
+        <configFile>web.config</configFile>
+        <install>
+          <configuration>
+            <nodes>
+              <node path="/configuration/system.webServer/modules" action="update" key="name" collision="overwrite">
+                <add name="VisitorTracker" type="Dnn.WebAnalytics.VisitorTracker, Dnn.WebAnalytics" preCondition="managedHandler" />
+              </node>
+            </nodes>
+          </configuration>
+        </install>
+        <uninstall>
+          <configuration>
+            <nodes>
+              <node path="/configuration/system.webServer/modules/add[@name='VisitorTracker']" action="remove" />
+            </nodes>
+          </configuration>
+        </uninstall>
+      </config>
+    </component>
+    <component type="Script">
+      <scripts>
         <basePath>DesktopModules\Dnn.WebAnalytics</basePath>
-        <file>
-          <path>app</path>
-          <name>app.js</name>
-        </file>
-        <file>
-          <path>app\controllers</path>
-          <name>map.js</name>
-        </file>
-        <file>
-          <path>app\controllers</path>
-          <name>view.js</name>
-        </file>
-        <file>
-          <path>app\directives</path>
-          <name>map.js</name>
-        </file>
-        <file>
-          <path>app\directives</path>
-          <name>view.js</name>
-        </file>
-        <file>
-          <path>app\services</path>
-          <name>map.js</name>
-        </file>
-        <file>
-          <path>app\services</path>
-          <name>visitor.js</name>
-        </file>
-        <file>
-          <path>app\services</path>
-          <name>visit.js</name>
-        </file>
-        <file>
-          <path>app\views</path>
-          <name>map.html</name>
-        </file>
-        <file>
-          <path>app\views</path>
-          <name>view.html</name>
-        </file>
-        <file>
-          <name>Map.ascx</name>
-        </file>
-        <file>
-          <name>MapSettings.ascx</name>
-        </file>
-        <file>
-          <path>plugins\angular-chart</path>
-          <name>angular-chart.js</name>
-        </file>
-        <file>
-          <path>plugins\angular-chart</path>
-          <name>angular-chart.min.js</name>
-        </file>
-        <file>
-          <name>View.ascx</name>
-        </file>
-        <file>
-          <path>plugins\angular-toastr</path>
-          <name>angular-toastr.min.css</name>
-        </file>
-        <file>
-          <path>plugins\angular-toastr</path>
-          <name>angular-toastr.tpls.min.js</name>
-        </file>
-        <file>
-          <path>plugins\datetime-picker</path>
-          <name>datetime-picker.js</name>
-        </file>
-        <file>
-          <path>plugins\datetime-picker</path>
-          <name>datetime-picker.min.js</name>
-        </file>
-        <file>
-          <path>plugins\datetime-picker</path>
-          <name>datetime-picker.tpls.js</name>
-        </file>
-        <file>
-          <path>plugins\ui.bootstrap</path>
-          <name>ui-bootstrap-tpls-2.0.2.min.js</name>
-        </file>
-        <file>
-          <path>plugins\ui.bootstrap</path>
-          <name>ui-bootstrap-tpls-2.5.0.min.js</name>
-        </file>
-        <file>
-          <path>plugins\ui.bootstrap</path>
-          <name>ui-bootstrap-tpls.js</name>
-        </file>
-      </files>
+        <script type="Install">
+          <path>Scripts</path>
+          <name>01.00.00.Sql</name>
+          <version>01.00.00</version>
+        </script>
+        <script type="Install">
+          <path>Scripts</path>
+          <name>01.01.00.Sql</name>
+          <version>01.01.00</version>
+        </script>
+        <script type="Install">
+          <path>Scripts</path>
+          <name>01.01.01.Sql</name>
+          <version>01.01.01</version>
+        </script>
+        <script type="UnInstall">
+          <path>Scripts</path>
+          <name>Uninstall.Sql</name>
+          <version>01.01.02</version>
+        </script>
+      </scripts>
     </component>
   </components>
-</package></packages>
+</package>
+      <package name="Dnn.VisitorsOnline" type="Module" version="01.01.02">
+        <friendlyName>Dnn.VisitorsOnline</friendlyName>
+        <description />
+        <iconFile>/Images/icon_extensions_32px.png</iconFile>
+        <owner>
+          <name />
+          <organization />
+          <url />
+          <email />
+        </owner>
+        <license />
+        <releaseNotes />
+        <components>
+          <component type="Module">
+            <desktopModule>
+              <moduleName>Dnn.VisitorsOnline</moduleName>
+              <foldername>Dnn.WebAnalytics</foldername>
+              <businessControllerClass />
+              <supportedFeatures />
+              <shareable>Supported</shareable>
+              <moduleDefinitions>
+                <moduleDefinition>
+                  <friendlyName>Dnn.VisitorsOnline</friendlyName>
+                  <definitionName>Dnn.VisitorsOnline</definitionName>
+                  <defaultCacheTime>0</defaultCacheTime>
+                  <moduleControls>
+                    <moduleControl>
+                      <controlKey />
+                      <controlSrc>DesktopModules/Dnn.WebAnalytics/Map.ascx</controlSrc>
+                      <supportsPartialRendering>False</supportsPartialRendering>
+                      <controlTitle />
+                      <controlType>Anonymous</controlType>
+                      <iconFile />
+                      <helpUrl />
+                      <supportsPopUps>False</supportsPopUps>
+                    </moduleControl>
+                  </moduleControls>
+                </moduleDefinition>
+              </moduleDefinitions>
+            </desktopModule>
+          </component>
+        </components>
+      </package>
+  </packages>
 </dotnetnuke>

@@ -1,6 +1,6 @@
 ﻿dnnWebAnalytics.factory('mapService', ['$http', function mapService($http) {
 
-    var base_path = "/api/Dnn.WebAnalytics/map";
+    var base_path = apiUrlBase + "/map";
 
     // interface
     var service = {
