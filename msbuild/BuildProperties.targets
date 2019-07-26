@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <CompanyName>DnnCommunity</CompanyName>
+        <ModuleName>Dnn.WebAnalytics</ModuleName>
+        <InstallDir>_Installation</InstallDir>
+        <svn></svn>
+        <BinDir>$(MSBuildProjectDirectory)\bin</BinDir>
+        <DotNetNukeDir>$(MSBuildProjectDirectory)\..\..</DotNetNukeDir>
+        <!-- DNN requires single digits to be prefixed with a zero -->
+        <Major>01</Major>
+        <Minor>01</Minor>
+        <Build>02</Build>
+        <Revision>00</Revision>
+    </PropertyGroup>
+</Project>
+
+
