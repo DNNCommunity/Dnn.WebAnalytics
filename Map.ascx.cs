@@ -33,6 +33,17 @@ namespace Dnn.WebAnalytics
                 Exceptions.ProcessModuleLoadException(this, ex);
             }
         }
+        protected string ApiUrlBase
+        {
+            get
+            {
+                if (DotNetNuke.Application.DotNetNukeContext.Current.Application.CurrentVersion.Major < 9)
+                {
+                    return "/desktopmodules/Dnn.WebAnalytics/api";
+                }
+                return "/api/Dnn.WebAnalytics";
+            }
+        }
 
     }
 

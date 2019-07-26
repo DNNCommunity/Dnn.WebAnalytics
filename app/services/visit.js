@@ -1,6 +1,6 @@
 ﻿dnnWebAnalytics.factory('visitService', ['$http', '$filter', function visitService($http, $filter) {
 
-    var base_path = "/api/Dnn.WebAnalytics/visit";
+    var base_path = apiUrlBase + "/visit";
 
     // interface
     var service = {
