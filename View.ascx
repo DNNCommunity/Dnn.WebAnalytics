@@ -8,4 +8,5 @@
     var module_id = <%= ModuleId %>;
     var portal_id = <%= PortalId %>;
     var sf = $.ServicesFramework(module_id);
+    var apiUrlBase = "<%= ApiUrlBase %>";
 </script>

@@ -1,5 +1,7 @@
 ﻿using DotNetNuke.Services.Exceptions;
 using System;
+using DotNetNuke.Entities.Controllers;
+using DotNetNuke.Entities.Host;
 using DotNetNuke.Entities.Modules.Actions;
 using DotNetNuke.Entities.Modules;
 
@@ -32,5 +34,16 @@ namespace Dnn.WebAnalytics
             }
         }
 
+        protected string ApiUrlBase
+        {
+            get
+            {
+                if (DotNetNuke.Application.DotNetNukeContext.Current.Application.CurrentVersion.Major < 9)
+                {
+                    return "/desktopmodules/Dnn.WebAnalytics/api";
+                }
+                return "/api/Dnn.WebAnalytics";
+            }
+        }
     }
 }
