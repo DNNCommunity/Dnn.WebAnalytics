@@ -22,7 +22,7 @@
     <Target Name="BeforeBuild" Condition="'$(ConfigurationName)'=='Release'">
         <CallTarget Targets="SetVersionInfo" />
     </Target>
-    <Target Name="AfterBuild">
+    <Target Name="AfterBuild" Condition="'$(ConfigurationName)'=='Release'">
         <CallTarget Targets="DeployFiles" />
     </Target>
     
@@ -43,7 +43,6 @@
         
         <CallTarget Targets="RemoveZips" Condition="'$(ConfigurationName)'=='Release'" />
         <CallTarget Targets="ZipInstall" Condition="'$(ConfigurationName)'=='Release'" />
-        <CallTarget Targets="CopyFilesToDotNetNuke" Condition="'$(DotNetNukeDir)'!=''" />
 
     </Target>
 
@@ -109,15 +108,6 @@
 
         <!-- cleanup -->
         <Delete Files="$(MSBuildProjectDirectory)\resources.zip"></Delete>
-    </Target>
-    <Target Name="CopyFilesToDotNetNuke">
-        <!-- Copy assemblies and Debug Info to DNN Bin Dir -->
-        <Message Text="MSBUILD: copying @(Assemblies) to $(DotNetNukeDir)\bin\" Importance="high"></Message>
-        <CreateItem Include="$(BinDir)\*.pdb;$(BinDir)\*.dll;">
-            <Output TaskParameter="Include" ItemName="Assemblies" />
-        </CreateItem>
-        <Copy SourceFiles="@(Assemblies)" DestinationFolder="$(DotNetNukeDir)\bin\" SkipUnchangedFiles="false" ContinueOnError="true" />
-        <Message Text="MSBUILD: Copied @(Assemblies) to $(DotNetNukeDir)\bin\" Importance="high"></Message>
     </Target>
 </Project>
 
