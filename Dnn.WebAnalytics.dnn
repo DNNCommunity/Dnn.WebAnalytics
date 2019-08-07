@@ -150,6 +150,15 @@
                       <helpUrl />
                       <supportsPopUps>False</supportsPopUps>
                     </moduleControl>
+                    <moduleControl>
+                      <controlKey>Settings</controlKey>
+                      <controlSrc>DesktopModules/Dnn.WebAnalytics/MapSettings.ascx</controlSrc>
+                      <supportsPartialRendering>True</supportsPartialRendering>
+                      <controlTitle>VisitorsOnline Settings</controlTitle>
+                      <controlType>Admin</controlType>
+                      <iconFile />
+                      <helpUrl />
+                    </moduleControl>
                   </moduleControls>
                 </moduleDefinition>
               </moduleDefinitions>
