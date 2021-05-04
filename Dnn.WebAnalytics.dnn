@@ -36,6 +36,16 @@
                 <helpUrl />
                 <supportsPopUps>False</supportsPopUps>
               </moduleControl>
+              <moduleControl>
+                <controlKey>Admin</controlKey>
+                <controlSrc>DesktopModules/Dnn.WebAnalytics/MapSettings.ascx</controlSrc>
+                <supportsPartialRendering>True</supportsPartialRendering>
+                <controlTitle>VisitorsOnline Settings</controlTitle>
+                <controlType>Admin</controlType>
+                <iconFile />
+                <helpUrl />
+                <supportsPopUps>True</supportsPopUps>
+              </moduleControl>
             </moduleControls>
           </moduleDefinition>
         </moduleDefinitions>
@@ -149,15 +159,6 @@
                       <iconFile />
                       <helpUrl />
                       <supportsPopUps>False</supportsPopUps>
-                    </moduleControl>
-                    <moduleControl>
-                      <controlKey>Admin</controlKey>
-                      <controlSrc>DesktopModules/Dnn.WebAnalytics/MapSettings.ascx</controlSrc>
-                      <supportsPartialRendering>True</supportsPartialRendering>
-                      <controlTitle>VisitorsOnline Settings</controlTitle>
-                      <controlType>Admin</controlType>
-                      <iconFile />
-                      <helpUrl />
                     </moduleControl>
                   </moduleControls>
                 </moduleDefinition>
