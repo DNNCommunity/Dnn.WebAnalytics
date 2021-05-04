@@ -83,7 +83,7 @@ GO
 ALTER TABLE {databaseOwner}[{objectQualifier}Visits] CHECK CONSTRAINT [FK_{objectQualifier}Visits_Visitors]
 GO
 
-IF EXISTS(SELECT 1 FROM {databaseOwner}[{objectQualifier}Schedule] WHERE [TypeFullName] = N'Dnn.WebAnalyticsLinqToSql.VisitorJob, Dnn.WebAnalyticsLinqToSql')
+IF EXISTS(SELECT 1 FROM {databaseOwner}[{objectQualifier}Schedule] WHERE [TypeFullName] = N'Dnn.WebAnalytics.VisitorJob, Dnn.WebAnalytics')
 BEGIN
 	UPDATE {databaseOwner}[{objectQualifier}Schedule] 
 	SET 
@@ -99,12 +99,12 @@ BEGIN
 		[Servers] = null, 
 		[FriendlyName] = 'Visitor Tracking Job' 
 	WHERE 
-		[TypeFullName] = N'Dnn.WebAnalyticsLinqToSql.VisitorJob, Dnn.WebAnalyticsLinqToSql';
+		[TypeFullName] = N'Dnn.WebAnalytics.VisitorJob, Dnn.WebAnalytics';
 END
 ELSE
 BEGIN
 	INSERT INTO {databaseOwner}[{objectQualifier}Schedule]
 		( [TypeFullName], [TimeLapse], [TimeLapseMeasurement], [RetryTimeLapse], [RetryTimeLapseMeasurement], [RetainHistoryNum], [AttachToEvent], [CatchUpEnabled], [Enabled], [ObjectDependencies], [Servers], [FriendlyName])
-	VALUES ( 'Dnn.WebAnalyticsLinqToSql.VisitorJob, Dnn.WebAnalyticsLinqToSql', 1, 'd', 1, 'd', 10, '', 0, 1, '', null, 'Visitor Tracking Job' );
+	VALUES ( 'Dnn.WebAnalytics.VisitorJob, Dnn.WebAnalytics', 1, 'd', 1, 'd', 10, '', 0, 1, '', null, 'Visitor Tracking Job' );
 END
 GO
